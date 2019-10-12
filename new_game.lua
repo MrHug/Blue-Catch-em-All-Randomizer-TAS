@@ -1,0 +1,112 @@
+function new_game()
+	client.reboot_core()
+	memory.usememorydomain("System Bus")
+	console.log("Let's do this!")
+	get_to_menu()
+	options()
+	set_name()
+	mashText(2)
+	advanceFrame(50)
+	mashText(6)
+	advanceFrame(160)
+end
+
+function get_to_menu()
+	advanceFrame(600)
+	pressButton(A)
+	advanceFrame(20)
+	pressButton(A)
+	advanceFrame(250)
+	pressButton(A)
+	advanceFrame(100)
+end
+
+function options()
+	pressButton(DOWN)
+	advanceFrame(4)
+	pressButton(A)
+	advanceFrame(23)
+	pressButton(DOWN)
+	advanceFrame(4)
+	pressButton(DOWN)
+	advanceFrame(4)
+	pressButton(RIGHT)
+	advanceFrame(4)
+	pressButton(DOWN)
+	advanceFrame(4)
+	pressButton(RIGHT)
+	advanceFrame(4)
+	pressButton(B)
+	advanceFrame(40)
+end
+
+function set_name()
+	pressButton(A)
+	advanceFrame(105)
+	mashText(5)
+	advanceFrame(50)
+	mashText(4)
+	advanceFrame(100)
+	mashText(8)
+	advanceFrame(80)
+	mashText(1)
+	advanceFrame(15)
+	mashText(1)
+	advanceFrame(10)
+	input_mrhug()
+	mashText(3)
+	advanceFrame(100)
+	mashText(4)
+	advanceFrame(15)
+	mashText(1)
+	advanceFrame(10)
+	input_aurei()
+end
+
+function input_mrhug()
+	turn(DOWN)
+	turnAndTakeSteps(RIGHT,2)
+	pressButton(A) -- M
+	advanceFrame(10)
+	turnAndTakeSteps(RIGHT,4)
+	pressButton(A) -- R
+	advanceFrame(10)
+	turn(UP)
+	turn(LEFT)
+	pressButton(A) -- H
+	advanceFrame(10)
+	turn(DOWN)
+	turn(DOWN)
+	turnAndTakeSteps(LEFT,4)
+	pressButton(A) -- U
+	advanceFrame(10)
+	turnAndTakeSteps(LEFT,4)
+	turn(UP)
+	turn(UP)
+	pressButton(A) -- G
+	advanceFrame(10)
+	pressButton(START)
+	advanceFrame(30)
+end
+
+function input_aurei()
+	pressButton(A) -- A
+	advanceFrame(10)
+	turnAndTakeSteps(DOWN,1)
+	turnAndTakeSteps(RIGHT,1)
+	pressButton(A) -- U
+	advanceFrame(10)
+	turnAndTakeSteps(LEFT,2)
+	turn(UP)
+	pressButton(A) -- R
+	advanceFrame(10)
+	turn(UP)
+	turnAndTakeSteps(LEFT,3)
+	pressButton(A) -- E
+	advanceFrame(10)
+	turnAndTakeSteps(RIGHT,3)
+	pressButton(A) -- E
+	advanceFrame(10)
+	pressButton(START)
+	advanceFrame(30)
+end
