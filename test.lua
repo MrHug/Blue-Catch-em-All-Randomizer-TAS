@@ -13,17 +13,10 @@ require "start_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(6)
+	savestate.loadslot(4)
 	while true do
 		client.unpause()
-	viridian_entrace_to_mart()
-	getOaksParcel()
-	viridian_mart_to_entrance()
-	route1_viridian_to_pallet_encounterless()
-	pallet_entrance_to_lab()
-	oaks_lab_behind_oak()
-	handoverParcel()
-	behind_oak_exit_lab()
+	battleRival()
 		client.pause()
 		break;
 	end

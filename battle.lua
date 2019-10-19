@@ -1,11 +1,23 @@
 function battleTrainer()
 	battleOpening()
-	logEnemy()
+
 	x=1
-	while enemyHP() > 0 do
+	while enemyHP() > 0 and myHP() > 0 do
+		logEnemy()
+		logMe()
 		pressAndAdvance(A)
 		x=findAndPerformMostPowerfullMove(x)
 	end
+	if enemyHP() == 0 then
+		console.log("Killed enemy")
+	elseif myHP() == 0 then
+		console.log("Got killed")
+		if memory.readbyte(MY_NUM_OF_POKES) == 1 then
+			console.log("Lost all pokes")
+			return false
+		end
+	end
+	
 	while battleType() > 0 do
 		pressAndAdvance(A)
 	end
@@ -31,7 +43,6 @@ function battleOpening()
 	end
 	mashText(1)
 	advanceFrame(400)
-	logEnemy()
 end
 
 function mostPowerfullMoveID() 
@@ -89,7 +100,7 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
 end
 
 function waitForNextTurn()
-	while memory.readbyte(X_COORD_MENU_MEM) ~= 14 and enemyHP() > 0 do
+	while memory.readbyte(X_COORD_MENU_MEM) ~= 14 and enemyHP() > 0 and myHP() > 0 do
 		pressAndAdvance(A)
 	end
 end
@@ -98,15 +109,28 @@ function enemyHP()
 	return memory.readbyte(ENEMY_HP_MEM) * 255 + memory.readbyte(ENEMY_HP_MEM+1)
 end
 
+function myHP()
+	return memory.readbyte(MY_HP_MEM) * 255 + memory.readbyte(MY_HP_MEM+1)
+end
+
 function enemyTypes()
 	return memory.readbyte(ENEMY_TYPE_1_MEM), memory.readbyte(ENEMY_TYPE_2_MEM)
 end
 
 function logEnemy()
+	console.log("-------")
 	console.log("Facing " .. pokemon_lookup[memory.readbyte(ENEMY_POKE_MEM)])
 	enemy_type1, enemy_type2 = enemyTypes()
 	console.log("Types: " .. types_lookup[enemy_type1] .. " " .. types_lookup[enemy_type2])
 	console.log("HP: " .. enemyHP())
+	console.log("-------")
+end
+
+function logMe()
+	console.log("-------")
+	console.log("My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
+	console.log("HP: " .. myHP())
+	console.log("-------")
 end
 
 function runFromBattle()
