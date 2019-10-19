@@ -1,12 +1,10 @@
 function battleTrainer()
 	battleOpening()
 	result = true
-	x=1
 	while enemyHP() > 0 and myHP() > 0 do
-		logEnemy()
-		logMe()
+		logAll()
 		pressAndAdvance(A)
-		x=findAndPerformMostPowerfullMove(x)
+		x=findAndPerformMostPowerfullMove()
 	end
 	if enemyHP() == 0 then
 		console.log("Killed enemy")
@@ -34,6 +32,42 @@ function battleWild()
 			return
 		end
 	end
+	
+	while enemyHP() > 0 and myHP() > 0 do
+		logAll()
+		if enemyHP() > enemyMaxHP() / 2 then 
+			goToMenuItem(0)
+			pressAndAdvance(A)
+			x=findAndPerformMostPowerfullMove()
+		else 
+			if throwPokeball() then
+				while battleType() ~= 0 do
+					pressAndAdvance(B,3)
+				end
+				console.log("Done with battle: " .. battleType())
+				return
+			end
+		end
+	end
+	
+end
+
+function throwPokeball()
+	before = totalOwned()
+	goToMenuItem(1)
+	index = findItemInInventory(POKEBALL_ID)
+	pressAndAdvance(A,5)
+	goDir(DOWN,index)
+	pressAndAdvance(A,5)
+	advanceFrame(400)
+	mashText(5)
+	if totalOwned() > before then
+		console.log("Caught it!")
+		console.log("Now own: " .. totalOwned())
+		mashText(5)
+		return true
+	end
+	return false
 end
 
 function battleOpening()
@@ -50,15 +84,17 @@ end
 function mostPowerfullMoveID() 
 	enemy_type1, enemy_type2 = enemyTypes()
 	
+	goToMenuItem(1)
 	index = -1
 	mostPower = 0
 	for i=1,4 do
 		movePower = memory.readbyte(MY_SELECTED_MOVE_POWER)
 		moveType = memory.readbyte(MY_SELECTED_MOVE_TYPE)
 		moveAcc = memory.readbyte(MY_SELECTED_MOVE_ACC)
+		movePP = memory.readbyte(MY_MOVES_PP_MEM + (i-1))
 		eff = effectiveness(moveType, enemy_type1, enemy_type2)
 		combined = movePower * moveAcc/255 * eff
-		if mostPower < combined then
+		if mostPower < combined and movePP > 0 then
 			mostPower = combined
 			index = i
 		end
@@ -71,12 +107,10 @@ function mostPowerfullMoveID()
 	return index
 end
 
-function findAndPerformMostPowerfullMove(x)
-	while x > 1 do
-		pressAndAdvance(DOWN)
-		x = x - 1
-	end
+function findAndPerformMostPowerfullMove()
+	
 	y = mostPowerfullMoveID()
+	x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
 	while y ~= x do
 		pressAndAdvance(DOWN)
 		x = x + 1
@@ -107,6 +141,10 @@ function waitForNextTurn()
 	end
 end
 
+function enemyMaxHP() 
+	return memory.readbyte(ENEMY_MAX_HP_MEM) * 255 + memory.readbyte(ENEMY_MAX_HP_MEM+1)
+end
+
 function enemyHP()
 	return memory.readbyte(ENEMY_HP_MEM) * 255 + memory.readbyte(ENEMY_HP_MEM+1)
 end
@@ -117,6 +155,14 @@ end
 
 function enemyTypes()
 	return memory.readbyte(ENEMY_TYPE_1_MEM), memory.readbyte(ENEMY_TYPE_2_MEM)
+end
+
+function logAll()
+	console.log("##########")
+	console.log("Turn: " .. memory.readbyte(IN_BATTLE_TURNS_MEM))
+	logMe()
+	logEnemy()
+	console.log("##########")
 end
 
 function logEnemy()

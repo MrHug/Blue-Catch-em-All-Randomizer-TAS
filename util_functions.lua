@@ -41,8 +41,14 @@ function advanceFrame(num)
 end
 
 function turn(dir)
+	cnt = 0
 	while memory.readbyte(MY_DIR_MEM) ~= dir_map[dir] do
-		pressButton(dir)	
+		if cnt == 0 then
+			pressButton(dir)
+		elseif cnt == 2 then
+			cnt = -1
+		end
+		cnt = cnt + 1
 		advanceFrame(1)
 		checkInBattle()
 	end
@@ -78,6 +84,7 @@ end
 function checkInBattle()
 	if memory.readbyte(IN_BATTLE_MEM) > 0 and memory.readbyte(IN_BATTLE_MEM) < 100 then
 		console.log("Battle detected: " .. memory.readbyte(IN_BATTLE_MEM))
+		savestate.saveslot(8)
 		battleWild()
 	end
 end
@@ -91,9 +98,38 @@ function goToMenuItem(id)
 	end
 end
 
+function findItemInInventory(item_id)
+	total_items = memory.readbyte(TOTAL_ITEMS_MEM)
+	for i=0,total_items-1 do
+		if memory.readbyte(ITEM_1_MEM + 2*i) == item_id then
+			return i
+		end
+	end
+end
+
 function goDir(dir, num)
 	num = num or 1
 	for i=1,num do
 		pressAndAdvance(dir,3)
 	end
+end
+
+function totalOwned()
+	owned = 0
+	for i=0,19 do
+		owned = owned + countHighBits(memory.readbyte(POKE_OWNED_MEM+i))
+	end
+	return owned
+end
+
+function countHighBits(inputByte)
+	cnt = 0
+	while inputByte > 0 do
+		if inputByte % 2 == 1 then
+			cnt = cnt + 1
+			inputByte = inputByte -1
+		end
+		inputByte = inputByte / 2
+	end
+	return cnt
 end

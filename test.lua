@@ -14,14 +14,14 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(9)
+	savestate.loadslot(2)
 	client.unpause()
 	while true do
-		goToMartCounter()
-		talkToMart()
-		buyItem(POKEBALL_ID,12)
-		stopTalkingToMart()
-		exitMart()
+		turnAndTakeSteps(DOWN,12)
+		while 1 > 0 do
+			turnAndTakeSteps(RIGHT)
+			turnAndTakeSteps(LEFT)
+		end
 		client.pause()
 		break;
 	end
