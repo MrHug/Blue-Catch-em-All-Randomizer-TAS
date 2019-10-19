@@ -39,12 +39,11 @@ function advanceFrame(num)
 end
 
 function turn(dir)
-	pressButton(dir)	
-	advanceFrame(1)
-	pressButton(dir)
-	advanceFrame(4)
-	
-	checkInBattle()
+	while memory.readbyte(MY_DIR_MEM) ~= dir_map[dir] do
+		pressButton(dir)	
+		advanceFrame(1)
+		checkInBattle()
+	end
 end
 
 function turnAndTakeSteps(dir, steps)
@@ -56,10 +55,14 @@ end
 function takeSteps(dir, steps)
 	steps = steps or 2
 	for i=1,steps do
-		walkInDir(dir)
-		advanceFrame(1)
-		walkInDir(dir)
-		advanceFrame(16)
+		while memory.readbyte(MY_ANIM_CNT_MEM) == 0 do
+			walkInDir(dir)
+			advanceFrame(1)
+		end
+		while memory.readbyte(MY_ANIM_CNT_MEM) ~= 0 do
+			advanceFrame(1)
+		end
+		
 		checkInBattle()
 	end
 end

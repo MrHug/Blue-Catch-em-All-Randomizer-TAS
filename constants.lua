@@ -16,6 +16,20 @@ START = 'Start'
 
 POKEBALL_ID = 4
 
+MY_DIR_MEM = 0xC109
+MY_ANIM_CNT_MEM = 0xC108
+
+DIR_DOWN = 0x0
+DIR_UP = 0x4
+DIR_LEFT = 0x8
+DIR_RIGHT = 0xC
+
+dir_map = {
+	[LEFT] = DIR_LEFT,
+	[UP] = DIR_UP,
+	[DOWN] = DIR_DOWN,
+	[RIGHT] = DIR_RIGHT
+}
 
 X_COORD_MENU_MEM = 0xCC24
 

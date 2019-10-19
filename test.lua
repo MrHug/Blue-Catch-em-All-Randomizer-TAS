@@ -8,15 +8,17 @@ package.loaded["battle"] = nil
 require "battle"
 package.loaded["start_game"] = nil
 require "start_game"
+package.loaded["new_game"] = nil
+require "new_game"
 
 
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(4)
+	savestate.loadslot(2)
 	while true do
 		client.unpause()
-	battleRival()
+		inspectPokes()
 		client.pause()
 		break;
 	end

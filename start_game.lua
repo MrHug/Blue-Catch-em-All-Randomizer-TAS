@@ -85,18 +85,17 @@ function inspectPokes()
 end
 
 function inspectPoke()
+	advanceFrame(2)
 	pressAndAdvance(A,180)
 	pressAndAdvance(A,5)
 	console.log("Pokemon at Oaks: " .. pokemon_lookup[memory.readbyte(0xCF91)])
-	pressAndAdvance(A,20)
+	pressAndAdvance(A,25)
 end
 
 function inspectAndRejectPoke()
 	inspectPoke()
-	pressButton(B)
-	advanceFrame(20)
-	pressButton(B)
-	advanceFrame(20)
+	pressAndAdvance(B,20)
+	pressAndAdvance(B,20)
 end
 
 function pickPoke()

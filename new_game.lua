@@ -53,6 +53,7 @@ function set_name()
 	advanceFrame(15)
 	mashText(1)
 	advanceFrame(10)
+	savestate.saveslot(1)
 	input_mrhug()
 	mashText(3)
 	advanceFrame(100)
@@ -63,50 +64,47 @@ function set_name()
 	input_aurei()
 end
 
+function goDir(dir, num)
+	num = num or 1
+	for i=1,num do
+		pressAndAdvance(dir,3)
+	end
+end
+
 function input_mrhug()
-	turn(DOWN)
-	turnAndTakeSteps(RIGHT,2)
-	pressButton(A) -- M
-	advanceFrame(10)
-	turnAndTakeSteps(RIGHT,4)
-	pressButton(A) -- R
-	advanceFrame(10)
-	turn(UP)
-	turn(LEFT)
-	pressButton(A) -- H
-	advanceFrame(10)
-	turn(DOWN)
-	turn(DOWN)
-	turnAndTakeSteps(LEFT,4)
-	pressButton(A) -- U
-	advanceFrame(10)
-	turnAndTakeSteps(LEFT,4)
-	turn(UP)
-	turn(UP)
-	pressButton(A) -- G
-	advanceFrame(10)
-	pressButton(START)
-	advanceFrame(30)
+	goDir(DOWN)
+	goDir(RIGHT,3)
+	pressAndAdvance(A,10) -- M
+	goDir(RIGHT,5)
+	pressAndAdvance(A,10) -- R
+	goDir(UP)
+	goDir(LEFT)
+	pressAndAdvance(A,10) -- H
+	goDir(DOWN,2)
+	goDir(RIGHT,4)
+	pressAndAdvance(A,10) -- U
+	goDir(LEFT,5)
+	goDir(UP,2)
+	pressAndAdvance(A,10) -- G
+	pressAndAdvance(START,30)
 end
 
 function input_aurei()
-	pressButton(A) -- A
-	advanceFrame(10)
-	turnAndTakeSteps(DOWN,1)
-	turnAndTakeSteps(RIGHT,1)
-	pressButton(A) -- U
-	advanceFrame(10)
-	turnAndTakeSteps(LEFT,2)
-	turn(UP)
-	pressButton(A) -- R
-	advanceFrame(10)
-	turn(UP)
-	turnAndTakeSteps(LEFT,3)
-	pressButton(A) -- E
-	advanceFrame(10)
-	turnAndTakeSteps(RIGHT,3)
-	pressButton(A) -- E
-	advanceFrame(10)
-	pressButton(START)
-	advanceFrame(30)
+	pressAndAdvance(A,10) -- A
+	goDir(DOWN,2)
+	goDir(RIGHT,2)
+	pressAndAdvance(A,10) -- U
+	
+	goDir(LEFT,3)
+	goDir(UP)
+	pressAndAdvance(A,10) -- R
+	
+	goDir(UP)
+	goDir(LEFT,4)
+	pressAndAdvance(A,10) -- E
+	
+	goDir(RIGHT,4)
+	pressAndAdvance(A,10) -- E
+
+	pressAndAdvance(START,30)
 end
