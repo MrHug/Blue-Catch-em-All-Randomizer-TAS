@@ -17,7 +17,7 @@ function battleTrainer()
 	end
 	
 	while battleType() > 0 do
-		pressAndAdvance(A)
+		pressAndAdvance(B)
 	end
 	advanceFrame(30)
 	return result
@@ -44,15 +44,25 @@ function battleWild()
 				while battleType() ~= 0 do
 					pressAndAdvance(B,3)
 				end
+				pressAndAdvance(B,10)
+				while battleType() ~= 0 do
+					pressAndAdvance(B,3)
+				end
 				console.log("Done with battle: " .. battleType())
 				return
 			end
 		end
 	end
 	
+	console.log("Accidentally killed it")
+	while battleType() > 0 do
+		pressAndAdvance(B)
+	end
+	advanceFrame(30)
 end
 
 function throwPokeball()
+	console.log("Trying to throw Pokeball")
 	before = totalOwned()
 	goToMenuItem(1)
 	index = findItemInInventory(POKEBALL_ID)
@@ -71,14 +81,10 @@ function throwPokeball()
 end
 
 function battleOpening()
-	if battleType() == 1 then -- Wild
-		advanceFrame(400)
-		logEnemy()
-	else 
-		advanceFrame(240) -- Trainer
+	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 do
+		pressAndAdvance(A,2)
+		pressAndAdvance(DOWN, 4)
 	end
-	mashText(1)
-	advanceFrame(400)
 end
 
 function mostPowerfullMoveID() 
@@ -136,8 +142,9 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
 end
 
 function waitForNextTurn()
-	while memory.readbyte(X_COORD_MENU_MEM) ~= 14 and enemyHP() > 0 and myHP() > 0 do
-		pressAndAdvance(A)
+	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 do
+		pressAndAdvance(B,2)
+		pressAndAdvance(DOWN, 4)
 	end
 end
 
