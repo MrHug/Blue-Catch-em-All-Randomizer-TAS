@@ -114,6 +114,33 @@ function goDir(dir, num)
 	end
 end
 
+function own(pokemon_id)
+	pokedex_id = pokemon_hex_to_pokedex[pokemon_id]
+	console.log("Checking if we own: " .. pokemon_lookup[pokemon_id] .. " number " .. pokedex_id)
+	cnt = 0
+	while pokedex_id > 8 do
+		pokedex_id = pokedex_id - 8
+		cnt = cnt + 1
+	end
+	full_byte = memory.readbyte(POKE_OWNED_MEM + cnt)
+	cnt = 1
+	result = false
+	--console.log("Checking in byte " .. full_byte .. " checking bit " .. pokedex_id)
+	while full_byte	> 0 do
+		if full_byte % 2 == 1 then
+			if cnt == pokedex_id then
+				result = true
+				break
+			end
+			full_byte = full_byte -1
+		end
+		full_byte = full_byte / 2
+		cnt = cnt + 1
+	end
+	console.log(result)
+	return result
+end
+
 function totalOwned()
 	owned = 0
 	for i=0,19 do

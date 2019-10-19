@@ -3,6 +3,7 @@ function battleTrainer()
 	result = true
 	while enemyHP() > 0 and myHP() > 0 do
 		logAll()
+		goToMenuItem(0)
 		pressAndAdvance(A)
 		x=findAndPerformMostPowerfullMove()
 	end
@@ -26,39 +27,41 @@ end
 function battleWild()
 	battleOpening()
 	pokeball_id = hasPokeballs()
-	if pokeball_id < 0 then
-		runFromBattle()
-		if battleType() == 0 then
-			return
+	if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
+		console.log("Will try to run")
+		
+		while battleType() ~= 0 do
+			runFromBattle()
 		end
-	end
-	
-	while enemyHP() > 0 and myHP() > 0 do
-		logAll()
-		if enemyHP() > enemyMaxHP() / 2 then 
-			goToMenuItem(0)
-			pressAndAdvance(A)
-			x=findAndPerformMostPowerfullMove()
-		else 
-			if throwPokeball() then
-				while battleType() ~= 0 do
-					pressAndAdvance(B,3)
+	else 
+		while enemyHP() > 0 and myHP() > 0 do
+			logAll()
+			if enemyHP() > enemyMaxHP() / 2 then 
+				goToMenuItem(0)
+				pressAndAdvance(A)
+				x=findAndPerformMostPowerfullMove()
+			else 
+				if throwPokeball() then
+					while battleType() ~= 0 do
+						pressAndAdvance(B,3)
+					end
+					pressAndAdvance(B,10)
+					while battleType() ~= 0 do
+						pressAndAdvance(B,3)
+					end
+					console.log("Done with battle: " .. battleType())
+					return
+				else
+					waitForNextTurn()
 				end
-				pressAndAdvance(B,10)
-				while battleType() ~= 0 do
-					pressAndAdvance(B,3)
-				end
-				console.log("Done with battle: " .. battleType())
-				return
 			end
 		end
+		console.log("Accidentally killed it")
+		while battleType() > 0 do
+			pressAndAdvance(B)
+		end
+		advanceFrame(30)
 	end
-	
-	console.log("Accidentally killed it")
-	while battleType() > 0 do
-		pressAndAdvance(B)
-	end
-	advanceFrame(30)
 end
 
 function throwPokeball()
@@ -67,6 +70,7 @@ function throwPokeball()
 	goToMenuItem(1)
 	index = findItemInInventory(POKEBALL_ID)
 	pressAndAdvance(A,5)
+	goToMenuItem(0)
 	goDir(DOWN,index)
 	pressAndAdvance(A,5)
 	advanceFrame(400)
@@ -142,7 +146,7 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
 end
 
 function waitForNextTurn()
-	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 do
+	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
 		pressAndAdvance(DOWN, 4)
 	end
@@ -190,9 +194,10 @@ end
 
 function runFromBattle()
 	pressAndAdvance(RIGHT)
-	pressAndAdvance(DOWN)
+	goToMenuItem(1)
 	pressAndAdvance(A,20)
-	pressAndAdvance(A,50)
+	waitForNextTurn()
+	console.log("Run attempt resolved")
 end
 
 function battleType() 

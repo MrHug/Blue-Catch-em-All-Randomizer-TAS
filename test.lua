@@ -14,10 +14,11 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(2)
+	savestate.loadslot(3)
 	client.unpause()
 	while true do
-		turnAndTakeSteps(DOWN,12)
+		console.log(own(152))
+		--turnAndTakeSteps(DOWN,12)
 		while 1 > 0 do
 			turnAndTakeSteps(RIGHT)
 			turnAndTakeSteps(LEFT)
