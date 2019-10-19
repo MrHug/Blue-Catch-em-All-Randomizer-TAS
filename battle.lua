@@ -1,6 +1,6 @@
 function battleTrainer()
 	battleOpening()
-
+	result = true
 	x=1
 	while enemyHP() > 0 and myHP() > 0 do
 		logEnemy()
@@ -14,7 +14,7 @@ function battleTrainer()
 		console.log("Got killed")
 		if memory.readbyte(MY_NUM_OF_POKES) == 1 then
 			console.log("Lost all pokes")
-			return false
+			result = false
 		end
 	end
 	
@@ -22,6 +22,7 @@ function battleTrainer()
 		pressAndAdvance(A)
 	end
 	advanceFrame(30)
+	return result
 end
 
 function battleWild()
