@@ -11,15 +11,17 @@ require "start_game"
 package.loaded["new_game"] = nil
 require "new_game"
 
-
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(6)
+	savestate.loadslot(9)
+	client.unpause()
 	while true do
-		client.unpause()
-		viridian_entrace_to_mart()
-	getOaksParcel()
+		goToMartCounter()
+		talkToMart()
+		buyItem(POKEBALL_ID,12)
+		stopTalkingToMart()
+		exitMart()
 		client.pause()
 		break;
 	end

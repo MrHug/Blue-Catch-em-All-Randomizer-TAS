@@ -64,12 +64,7 @@ function set_name()
 	input_aurei()
 end
 
-function goDir(dir, num)
-	num = num or 1
-	for i=1,num do
-		pressAndAdvance(dir,3)
-	end
-end
+
 
 function input_mrhug()
 	goDir(DOWN)

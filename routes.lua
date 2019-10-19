@@ -37,24 +37,25 @@ function route1_viridian_to_pallet_encounterless()
 	takeSteps(DOWN,4)
 	takeHop(DOWN,1)
 	
-	turnAndTakeSteps(RIGHT,9)
+	turnAndTakeSteps(RIGHT,8)
 	turnAndTakeSteps(DOWN,3)
 	takeHop(DOWN)
-	takeSteps(DOWN,2)
+	takeSteps(DOWN,1)
 	turnAndTakeSteps(LEFT,6)
 	turn(DOWN)
-	takeHop(DOWN,1)
-	turnAndTakeSteps(DOWN,11)
+	takeHop(DOWN)
+	turnAndTakeSteps(DOWN,10)
 end
 
 function viridian_entrace_to_mart()
 	turnAndTakeSteps(LEFT,2)
 	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(RIGHT,3)
+	turnAndTakeSteps(RIGHT,4)
 	-- Check if Center is needed
-	turnAndTakeSteps(RIGHT,7)
-	turnAndTakeSteps(UP,8)
-	turnAndTakeSteps(UP,2)
+	turnAndTakeSteps(RIGHT,3)
+	turnAndTakeSteps(UP,6)
+	turnAndTakeSteps(RIGHT,3)
+	turnAndTakeSteps(UP,1)
 	transition()
 end
 
@@ -63,7 +64,7 @@ function viridian_mart_to_entrance()
 	turnAndTakeSteps(DOWN,6)
 	takeHop(DOWN)
 	takeSteps(DOWN,2)
-	turnAndTakeSteps(LEFT,6)
+	turnAndTakeSteps(LEFT,5)
 end
 
 function pallet_entrance_to_lab()

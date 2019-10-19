@@ -28,6 +28,16 @@ function start_game()
 	oaks_lab_behind_oak()
 	handoverParcel()
 	behind_oak_exit_lab()
+	savestate.saveslot(9)
+	lab_to_pallet_entrance()
+	route1_pallet_to_viridian()
+	viridian_entrace_to_mart()
+	savestate.saveslot(0)
+	goToMartCounter()
+	talkToMart()
+	buyItem(POKEBALL_ID,12)
+	stopTalkingToMart()
+	exitMart()
 end
 
 
@@ -154,6 +164,6 @@ function handoverParcel()
 	pressAndAdvance(A,10)
 	mashText(15)
 	advanceFrame(100) -- Rival walking
-	mashText(46)
+	mashText(75)
 	advanceFrame(100) -- Rival walking
 end
