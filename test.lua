@@ -15,10 +15,11 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(2)
+	savestate.loadslot(6)
 	while true do
 		client.unpause()
-		inspectPokes()
+		viridian_entrace_to_mart()
+	getOaksParcel()
 		client.pause()
 		break;
 	end

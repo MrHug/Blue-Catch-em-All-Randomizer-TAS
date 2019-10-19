@@ -7,7 +7,20 @@ function route1_pallet_to_viridian()
 	turnAndTakeSteps(LEFT,3)
 	turnAndTakeSteps(UP,7)
 	turnAndTakeSteps(RIGHT,5)
-	turnAndTakeSteps(UP,12)
+	
+	-- Dodge the dude
+	cnt = 0
+	while memory.readbyte(SPRITE_X_POS_MEM + 0x10 * 2) == memory.readbyte(SPRITE_X_POS_MEM) do
+		turnAndTakeSteps(RIGHT,1)
+		cnt = cnt + 1
+	end
+	turnAndTakeSteps(UP,3)
+	while cnt > 0 do
+		cnt = cnt - 1
+		turnAndTakeSteps(LEFT,1)
+	end
+	
+	turnAndTakeSteps(UP,9)
 	turnAndTakeSteps(LEFT,3)
 	turnAndTakeSteps(UP,10)
 end

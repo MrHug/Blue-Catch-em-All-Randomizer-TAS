@@ -58,12 +58,12 @@ function takeSteps(dir, steps)
 		while memory.readbyte(MY_ANIM_CNT_MEM) == 0 do
 			walkInDir(dir)
 			advanceFrame(1)
+			checkInBattle()
 		end
 		while memory.readbyte(MY_ANIM_CNT_MEM) ~= 0 do
 			advanceFrame(1)
+			checkInBattle()
 		end
-		
-		checkInBattle()
 	end
 end
 

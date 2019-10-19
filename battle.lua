@@ -39,6 +39,7 @@ end
 function battleOpening()
 	if battleType() == 1 then -- Wild
 		advanceFrame(400)
+		logEnemy()
 	else 
 		advanceFrame(240) -- Trainer
 	end
