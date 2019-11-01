@@ -14,15 +14,12 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(3)
+	savestate.loadslot(0)
 	client.unpause()
 	while true do
-		console.log(own(152))
-		--turnAndTakeSteps(DOWN,12)
-		while 1 > 0 do
-			turnAndTakeSteps(RIGHT)
-			turnAndTakeSteps(LEFT)
-		end
+		viridian_center_to_route1catching()
+		lookForEncounter()
+		route1catching_to_viridian_center()
 		client.pause()
 		break;
 	end

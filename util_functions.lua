@@ -1,6 +1,8 @@
 package.loaded["mart"] = nil
 require "mart"
 
+hadBattle = false
+
 function walkInDir(dir)
 	input = {}
 	input[B] = true
@@ -84,6 +86,7 @@ end
 function checkInBattle()
 	if memory.readbyte(IN_BATTLE_MEM) > 0 and memory.readbyte(IN_BATTLE_MEM) < 100 then
 		console.log("Battle detected: " .. memory.readbyte(IN_BATTLE_MEM))
+		hadBattle = true
 		savestate.saveslot(8)
 		battleWild()
 	end
@@ -137,7 +140,6 @@ function own(pokemon_id)
 		full_byte = full_byte / 2
 		cnt = cnt + 1
 	end
-	console.log(result)
 	return result
 end
 
@@ -159,4 +161,42 @@ function countHighBits(inputByte)
 		inputByte = inputByte / 2
 	end
 	return cnt
+end
+
+function enterCenterAndHeal()
+	turnAndTakeSteps(UP,1)
+	transition()
+	turnAndTakeSteps(UP,4)
+	pressAndAdvance(A)
+	mashText(3)
+	pressAndAdvance(A)
+	mashTillTurned(DOWN)
+end
+
+function exitCenterAfterHeal()
+	turnAndTakeSteps(DOWN,5)
+	transition()
+end
+
+function mashTillTurned(dir)
+	cnt = 0
+	while memory.readbyte(MY_DIR_MEM) ~= dir_map[dir] do
+		if cnt == 0 then
+			pressButton(dir)
+		elseif cnt == 3 then
+			cnt = -1
+		end
+		pressButton(B)
+		cnt = cnt + 1
+		advanceFrame(1)
+		checkInBattle()
+	end
+end
+
+function lookForEncounter()
+	hadBattle = false
+	while hadBattle == false do
+		turn(RIGHT)
+		turn(LEFT)
+	end
 end

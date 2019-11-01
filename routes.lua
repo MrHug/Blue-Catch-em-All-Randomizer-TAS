@@ -59,6 +59,30 @@ function viridian_entrace_to_mart()
 	transition()
 end
 
+function viridian_entrace_to_pokecenter()
+	turnAndTakeSteps(LEFT,1)
+	turnAndTakeSteps(UP,4)
+	turnAndTakeSteps(RIGHT,4)
+end
+
+function viridian_center_to_route1catching()
+	turnAndTakeSteps(DOWN,1)
+	turnAndTakeSteps(DOWN,2)
+	turnAndTakeSteps(LEFT,2)
+	turnAndTakeSteps(DOWN,10)
+	turnAndTakeSteps(DOWN,1)
+	turnAndTakeSteps(RIGHT,3)
+end
+
+function route1catching_to_viridian_center()
+	turnAndTakeSteps(UP,2)
+	turnAndTakeSteps(LEFT,4)
+	turnAndTakeSteps(UP,12)
+	turnAndTakeSteps(LEFT,1)
+	turnAndTakeSteps(UP,2)
+	turnAndTakeSteps(RIGHT,4)
+end
+
 function viridian_mart_to_entrance()
 	turnAndTakeSteps(LEFT,3)
 	turnAndTakeSteps(DOWN,6)
