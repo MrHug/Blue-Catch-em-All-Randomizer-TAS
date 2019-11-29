@@ -1,5 +1,7 @@
 package.loaded["mart"] = nil
 require "mart"
+package.loaded["map_reading"] = nil
+require "map_reading"
 
 hadBattle = false
 
@@ -181,9 +183,9 @@ end
 function mashTillTurned(dir)
 	cnt = 0
 	while memory.readbyte(MY_DIR_MEM) ~= dir_map[dir] do
-		if cnt == 0 then
+		if cnt <= 1 then
 			pressButton(dir)
-		elseif cnt == 3 then
+		elseif cnt == 4 then
 			cnt = -1
 		end
 		pressButton(B)
@@ -198,5 +200,103 @@ function lookForEncounter()
 	while hadBattle == false do
 		turn(RIGHT)
 		turn(LEFT)
+	end
+end
+
+function pickupItem(dir)
+	pressAndAdvance(A,1)
+	mashTillTurned(dir)
+end
+
+function findPathFromCurPos(dst)
+	map = readMap()
+	src = {
+		[0] = memory.readbyte(MY_Y_MEM),
+		[1] = memory.readbyte(MY_X_MEM),
+	}
+	return findPath(src, dst, map)
+end
+
+function findPath(src, dst, map)
+    local queue = {src}
+	
+    local visited = {}
+	local prev = {}
+	for i=0,#map do
+		visited[i] = {}
+		prev[i] = {}
+		for j=0,#map[i] do
+			visited[i][j] = 0
+			prev[i][j] = {}
+		end
+	end
+	visited[src[0]][src[1]] = 1
+	
+	x_dir = {[1] = 1, [2] = -1, [3] = 0, [4] = 0}
+	y_dir = {[1] = 0, [2] = 0, [3] = 1, [4] = -1}
+	
+	cnt = 0
+	while 0 < #queue do
+		node = table.remove(queue)
+		cur_x = node[0]
+		cur_y = node[1]
+		
+		--console.log(cur_x .. ":" .. cur_y)
+		if node[0] == dst[0] and node[1] == dst[1] then
+			return buildPath(src, dst, prev)
+		end
+		for i=1,4 do
+			neighbour = {[0] = cur_x + x_dir[i], [1] = cur_y + y_dir[i]}
+			
+			if map[neighbour[0]] ~= nil and map[neighbour[0]][neighbour[1]] == 1 then 
+				if visited[neighbour[0]][neighbour[1]] ~= 1 then
+					visited[neighbour[0]][neighbour[1]] = 1
+					prev[neighbour[0]][neighbour[1]] = node
+					--console.log("Added " .. neighbour[0] .. ":" .. neighbour[1])
+					table.insert(queue, 1, neighbour)
+				end
+			end
+		end
+		--logArray(queue)
+		cnt = cnt + 1
+		if cnt > 500 then
+			console.log("TIMEOUT")
+			break
+		end
+	end
+	return false
+end
+
+function buildPath(src, dst, prev)
+	path = {dst}
+	console.log("Building path")
+	while dst[0] ~= src[0] or dst[1] ~= src[1] do 
+		dst = prev[dst[0]][dst[1]]
+		--console.log(dst[0] .. ":" .. dst[1])
+		table.insert(path, 1, dst)
+	end
+	return path 
+end
+
+function logArray(arr) 
+	for i,v in ipairs(arr) do print(i,v) end
+end
+
+function walkPath(path)
+	for i,v in ipairs(path) do
+		my_x = memory.readbyte(MY_X_MEM)
+		my_y = memory.readbyte(MY_Y_MEM)
+		
+		if (my_x < v[1]) then
+			turnAndTakeSteps(RIGHT)
+		elseif (my_x > v[1]) then
+			turnAndTakeSteps(LEFT)
+		else 
+			if (my_y < v[0]) then
+				turnAndTakeSteps(DOWN,1)
+			elseif (my_y > v[0]) then
+				turnAndTakeSteps (UP, 1)
+			end
+		end
 	end
 end

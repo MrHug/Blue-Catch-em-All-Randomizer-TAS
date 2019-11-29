@@ -153,15 +153,15 @@ function waitForNextTurn()
 end
 
 function enemyMaxHP() 
-	return memory.readbyte(ENEMY_MAX_HP_MEM) * 255 + memory.readbyte(ENEMY_MAX_HP_MEM+1)
+	return memory.readbyte(ENEMY_MAX_HP_MEM) * 256 + memory.readbyte(ENEMY_MAX_HP_MEM+1)
 end
 
 function enemyHP()
-	return memory.readbyte(ENEMY_HP_MEM) * 255 + memory.readbyte(ENEMY_HP_MEM+1)
+	return memory.readbyte(ENEMY_HP_MEM) * 256 + memory.readbyte(ENEMY_HP_MEM+1)
 end
 
 function myHP()
-	return memory.readbyte(MY_HP_MEM) * 255 + memory.readbyte(MY_HP_MEM+1)
+	return memory.readbyte(MY_HP_MEM) * 256 + memory.readbyte(MY_HP_MEM+1)
 end
 
 function enemyTypes()

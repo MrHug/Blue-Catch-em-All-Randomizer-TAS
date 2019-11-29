@@ -120,3 +120,36 @@ function behind_oak_exit_lab()
 	turnAndTakeSteps(DOWN,11)
 	transition()
 end
+
+function viridian_center_to_forest(pick_up)
+	turnAndTakeSteps(LEFT,4)
+	turnAndTakeSteps(UP,20)
+	-- Dodge the dude
+	cnt = 0
+	while memory.readbyte(SPRITE_X_POS_MEM + 0x10 * 7) == memory.readbyte(SPRITE_X_POS_MEM) do
+		turnAndTakeSteps(LEFT,1)
+		cnt = cnt + 1
+	end
+	turnAndTakeSteps(UP,2)
+	while cnt > 0 do
+		cnt = cnt - 1
+		turnAndTakeSteps(RIGHT,1)
+	end
+	if pick_up then
+		turnAndTakeSteps(LEFT,4)
+		pickupItem(RIGHT)
+		turnAndTakeSteps(RIGHT,3)
+	else 
+		turnAndTakeSteps(LEFT)
+	end
+	turnAndTakeSteps(UP,14)
+	turnAndTakeSteps(LEFT)
+	turnAndTakeSteps(UP,5)
+	turnAndTakeSteps(LEFT,3)
+	turnAndTakeSteps(UP,5)
+	turnAndTakeSteps(RIGHT,6)
+	turnAndTakeSteps(UP,8)
+	turnAndTakeSteps(LEFT,7)
+	turnAndTakeSteps(UP)
+	transition()
+end
