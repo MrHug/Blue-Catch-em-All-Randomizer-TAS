@@ -1,13 +1,20 @@
-tileToWalkable = {
+local GRASS_COST = 20
+
+local tileToWalkable = {
 	[0] = { -- overworld
 		[01] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [07] = {[0] = 1, [1] = 1, [2] = -1, [3] = -1},    
 		[08] = {[0] = 1, [1] = 1, [2] = 1, [3] = 0},
     [10] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
-		[11] = {[0] = 5, [1] = 5, [2] = 5, [3] = 5},
-    [26] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
-    [47] = {[0] = 1, [1] = 1, [2] = 0, [3] = 1},
+		[11] = {[0] = GRASS_COST, [1] = GRASS_COST, [2] = GRASS_COST, [3] = GRASS_COST},
+    [26] = {[0] = 1, [1] = 1, [2] = -1, [3] = -1},
+		[28] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},    
+    [47] = {[0] = 1, [1] = 1, [2] = -1, [3] = 1},
     [49] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [66] = {[0] = 1, [1] = 0, [2] = -1, [3] = 0},
 		[86] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
+    [110] = {[0] = 1, [1] = 0, [2] = 1, [3] = 0},    
+		[111] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
     [116] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
 		[119] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
 	},
@@ -52,7 +59,7 @@ function readMap()
 	map_height = memory.readbyte(0xD368)
 	map_width = memory.readbyte(0xD369)
 	map_tileset = memory.readbyte(0xD367)
-	console.log("Map " .. map_num .. ", of size " .. map_width .. " by " .. map_height .. ", with tile set " .. map_tileset)
+	--console.log("Map " .. map_num .. ", of size " .. map_width .. " by " .. map_height .. ", with tile set " .. map_tileset)
 	
 	mem_index = memory.readbyte(0xD36A) + memory.readbyte(0xD36B) *256
 	--console.log(mem_index)
