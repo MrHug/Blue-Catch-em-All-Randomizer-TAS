@@ -16,12 +16,13 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(5)
+	savestate.loadslot(0)
 	client.unpause()
 	while true do
-		walkTo(route_1_pallet)
+		walkTo(viridian_forest_tree_item)
+    
+    --client.pause()
     break
-		--client.pause()
 	end
 end
 

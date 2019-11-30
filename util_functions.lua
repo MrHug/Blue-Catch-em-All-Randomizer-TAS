@@ -89,19 +89,29 @@ end
 
 function checkInBattle()
 	if memory.readbyte(IN_BATTLE_MEM) > 0 and memory.readbyte(IN_BATTLE_MEM) < 100 then
-		console.log("Battle detected: " .. memory.readbyte(IN_BATTLE_MEM))
+		console.log("Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
 		hadBattle = true
 		savestate.saveslot(8)
-		battleWild()
+    if battleType() == WILD_BATTLE then
+      battleWild()
+    else 
+      battleTrainer()
+    end
 	end
 end
 
-function goToMenuItem(id)
+function goToMenuItem(id, additional_button)
 	while memory.readbyte(SELECTED_MENU_ITEM_MEM) < id do
 		pressAndAdvance(DOWN, 4)
+    if additional_button then
+      pressAndAdvance(additional_button, 1)
+    end
 	end
 	while memory.readbyte(SELECTED_MENU_ITEM_MEM) > id do
 		pressAndAdvance(UP, 4)
+    if additional_button then
+      pressAndAdvance(additional_button, 1)
+    end
 	end
 end
 

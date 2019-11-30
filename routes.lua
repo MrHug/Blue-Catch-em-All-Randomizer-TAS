@@ -20,30 +20,38 @@ oak_lab_exit = {[0]= 11, [1] = 5}
 route_1_pallet = { [0] = 35, [1] = 10 }
 route_1_viridian = { [0] = 0, [1] = 11} 
 
+-- Viridian
+
+viridian_center = { [0] = 26, [1] = 23}
+viridian_mart = { [0] = 20, [1] = 29}
+viridian_route_2 = { [0] = 0, [1] = 18}
+viridian_route_1 = { [0] = 32, [1] = 21}
+
+
+-- Route 2
+
+route_2_viridian = { [0] = 71, [1] = 8}
+route_2_forest_viridian_side = { [0] = 44, [1] = 3}
+
+-- Viridian Forest
+
+viridian_forest_south_gate_viridian = {[0] = 7, [1] = 5}
+viridian_forest_south_gate_forest = {[0] = 1, [1] = 5}
+viridian_forest_south_entrance = { [0] = 47, [1] = 17}
+viridian_forest_tree_item = { [0] = 42, [1] = 15}
+viridian_forest_west_item = { [0] = 31, [1] = 2}
+viridian_forest_north_entrance = { [0] = 0, [1] = 1}
+
+-- Pokemarts
+pokemart_counter = { [0] = 5, [1] = 2}
+pokemart_exit = { [0] = 0, [1] = 5}
+
 function route1_pallet_to_viridian()
 	moveTo(route_1_viridian)
 end
 
 function route1_viridian_to_pallet_encounterless()
-	turnAndTakeSteps(DOWN,8)
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(DOWN,2)
-	takeHop(DOWN,1)
-	takeSteps(DOWN,2)
-	takeHop(DOWN,1)
-	takeSteps(DOWN,2)
-	takeHop(DOWN,1)
-	takeSteps(DOWN,4)
-	takeHop(DOWN,1)
-	
-	turnAndTakeSteps(RIGHT,8)
-	turnAndTakeSteps(DOWN,3)
-	takeHop(DOWN)
-	takeSteps(DOWN,1)
-	turnAndTakeSteps(LEFT,6)
-	turn(DOWN)
-	takeHop(DOWN)
-	turnAndTakeSteps(DOWN,10)
+	moveTo(route_1_pallet)
 end
 
 function viridian_entrace_to_mart()

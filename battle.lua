@@ -1,21 +1,24 @@
 function battleTrainer()
 	battleOpening()
-	result = true
-	while enemyHP() > 0 and myHP() > 0 do
-		logAll()
-		goToMenuItem(0)
+	local result = true
+  goToMenuItem(0)
+  local numEnemyPoke = memory.readbyte(ENEMY_NUM_POKE_MEM)
+	while numEnemyPoke > 0 and myHP() > 0 do
+    logAll()
+    goToMenuItem(0, B)
 		pressAndAdvance(A)
 		x=findAndPerformMostPowerfullMove()
-	end
-	if enemyHP() == 0 then
-		console.log("Killed enemy")
-	elseif myHP() == 0 then
-		console.log("Got killed")
-		if memory.readbyte(MY_NUM_OF_POKES) == 1 then
-			console.log("Lost all pokes")
-			result = false
-		end
-	end
+    if enemyHP() == 0 then
+      console.log("Killed enemy")
+      numEnemyPoke = numEnemyPoke - 1
+    elseif myHP() == 0 then
+      console.log("Got killed")
+      if memory.readbyte(MY_NUM_OF_POKES) == 1 then
+        console.log("Lost all pokes")
+        result = false
+      end
+    end
+  end
 	
 	while battleType() > 0 do
 		pressAndAdvance(B)
@@ -187,6 +190,7 @@ end
 
 function logMe()
 	console.log("-------")
+  console.log(memory.readbyte(MY_POKE_MEM))
 	console.log("My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
 	console.log("HP: " .. myHP())
 	console.log("-------")
