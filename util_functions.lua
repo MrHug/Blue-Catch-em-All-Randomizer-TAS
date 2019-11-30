@@ -208,12 +208,27 @@ function pickupItem(dir)
 	mashTillTurned(dir)
 end
 
+function walkTo(dst, dir)
+  myY, myX = getMyPos()
+  while myX ~= dst[1] or myY ~= dst[0] do
+    a = findPathFromCurPos(dst)
+    if a and #a > 0 then
+      walkPath(a)
+    else 
+      console.log("Error: no path found!")
+      return false
+    end
+    myY, myX = getMyPos()
+  end
+  if dir then
+    turn(dir)
+  end
+  return true
+end
+
 function findPathFromCurPos(dst)
 	map = readMap()
-	src = {
-		[0] = memory.readbyte(MY_Y_MEM),
-		[1] = memory.readbyte(MY_X_MEM),
-	}
+	_, _, src = getMyPos()
 	return findPath(src, dst, map)
 end
 
@@ -248,7 +263,7 @@ function findPath(src, dst, map)
 		for i=1,4 do
 			neighbour = {[0] = cur_x + x_dir[i], [1] = cur_y + y_dir[i]}
 			
-			if map[neighbour[0]] ~= nil and map[neighbour[0]][neighbour[1]] == 1 then 
+			if map[neighbour[0]] ~= nil and map[neighbour[0]][neighbour[1]] > 0 then 
 				if visited[neighbour[0]][neighbour[1]] ~= 1 then
 					visited[neighbour[0]][neighbour[1]] = 1
 					prev[neighbour[0]][neighbour[1]] = node
@@ -298,5 +313,20 @@ function walkPath(path)
 				turnAndTakeSteps (UP, 1)
 			end
 		end
+  	my_x = memory.readbyte(MY_X_MEM)
+		my_y = memory.readbyte(MY_Y_MEM)
+    if (my_x ~= v[1] or my_y ~= v[0]) then
+      console.log("Path interrupted!")
+      return false
+    end
 	end
+  return true
+end
+
+function getMyPos()
+  src = {
+		[0] = memory.readbyte(MY_Y_MEM),
+		[1] = memory.readbyte(MY_X_MEM),
+	}
+  return src[0], src[1], src
 end

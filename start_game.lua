@@ -14,7 +14,8 @@ function start_game()
 	battleRival()
 	savestate.saveslot(4)
 	exitLabAfterRivalFight()
-	lab_to_pallet_entrance()
+	walkTo(pallet_route_1)
+  turnAndTakeSteps(UP)
 	savestate.saveslot(5)
 	route1_pallet_to_viridian()
 	savestate.saveslot(6)
@@ -29,7 +30,8 @@ function start_game()
 	handoverParcel()
 	behind_oak_exit_lab()
 	savestate.saveslot(9)
-	lab_to_pallet_entrance()
+	walkTo(pallet_route_1)
+  turnAndTakeSteps(UP)
 	route1_pallet_to_viridian()
 	viridian_entrace_to_mart()
 	savestate.saveslot(0)
@@ -42,10 +44,7 @@ end
 
 
 function getPCPotion()
-	turnAndTakeSteps(LEFT,2)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(LEFT)
-	turn(UP)
+	walkTo(my_room_pc)
 	enterItemBoxFromHomePC()
 end
 
@@ -61,36 +60,26 @@ function enterItemBoxFromHomePC()
 end
 
 function moveToGrass()
-	console.log("Moving to grass")
-	turnAndTakeSteps(RIGHT, 7)
-	turnAndTakeSteps(UP)
+	walkTo(my_room_stairs)
 	transition()
-	turnAndTakeSteps(DOWN,6)
-	turnAndTakeSteps(LEFT,4)
-	turnAndTakeSteps(DOWN)
+	walkTo(my_house_exit)
+  turnAndTakeSteps(DOWN)
 	transition()
-	turnAndTakeSteps(RIGHT,5)
-	turnAndTakeSteps(UP,5)
+	walkTo(pallet_exit_grass)
 end
 
 function walkWithOak()
-	advanceFrame(76)
-	pressButton(A) -- Hey Wait
-	advanceFrame(192) -- Oak walking
-	mashText(5)
-	pressButton(A) -- Come with me
-	advanceFrame(552)
+	while memory.readbyte(MAP_NUM_MEM) ~= 40 or memory.readbyte(MY_X_MEM) ~= 5 or memory.readbyte(MY_Y_MEM) ~= 3 do
+    pressAndAdvance(B)
+  end
 end
 
 function inspectPokes()
-	turn(RIGHT)
+	walkTo(oak_lab_ball_1,UP)
 	inspectAndRejectPoke()
-	turnAndTakeSteps(DOWN)
-	turnAndTakeSteps(RIGHT,2)
-	turn(UP)
+	walkTo(oak_lab_ball_2,UP)
 	inspectAndRejectPoke()
-	turnAndTakeSteps(RIGHT)
-	turn(UP)
+	walkTo(oak_lab_ball_3,UP)
 	inspectAndRejectPoke()
 end
 
@@ -128,8 +117,7 @@ function waitForRival()
 	advanceFrame(140)
 	pressButton(A)
 	advanceFrame(5)
-	turnAndTakeSteps(DOWN)
-	turnAndTakeSteps(LEFT,3)
+	walkTo(oak_lab_rival_fight)
 end
 
 function battleRival()
@@ -145,8 +133,9 @@ function exitLabAfterRivalFight()
 	advanceFrame(50)
 	mashText(5)
 	advanceFrame(205) -- Rival walks out
-	takeSteps(DOWN,7)
-	transition()
+	walkTo(oak_lab_exit)
+  turnAndTakeSteps(DOWN)
+  transition()
 end
 
 function getOaksParcel()

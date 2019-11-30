@@ -2,8 +2,35 @@ tileToWalkable = {
 	[0] = { -- overworld
 		[01] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
 		[08] = {[0] = 1, [1] = 1, [2] = 1, [3] = 0},
-		[26] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
+    [10] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+		[11] = {[0] = 5, [1] = 5, [2] = 5, [3] = 5},
+    [26] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
+    [47] = {[0] = 1, [1] = 1, [2] = 0, [3] = 1},
+    [49] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+		[86] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
+    [116] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+		[119] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
 	},
+  [1] = { -- Is used for ground floor of reds house?
+    [07] = {[0] = 0, [1] = 0, [2] = 1, [3] = 1},
+		[11] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+		[15] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+  },
+	[4] = { -- reds house
+		[05] = {[0] = 0, [1] = 0, [2] = 1, [3] = 1},
+		[08] = {[0] = 0, [1] = 0, [2] = 1, [3] = 1},
+		[13] = {[0] = 1, [1] = 0, [2] = 1, [3] = 0},
+		[15] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+	},
+  [5] = { -- Oaks lab / Gym
+    [4] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [5] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [109] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [110] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [103] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+    [105] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
+    [116] = {[0] = 1, [1] = 1, [2] = 0, [3] = 1},
+  },
 	[6] = { -- Pokecenter
 		[08] = {[0] = 0, [1] = 1, [2] = 0, [3] = 1},
 		[10] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
@@ -21,7 +48,7 @@ tileToWalkable = {
 
 
 function readMap()
-	map_num = memory.readbyte(0xD35E)
+	map_num = memory.readbyte(MAP_NUM_MEM)
 	map_height = memory.readbyte(0xD368)
 	map_width = memory.readbyte(0xD369)
 	map_tileset = memory.readbyte(0xD367)
@@ -61,6 +88,18 @@ function mapDataToWalkableMap(map_data, map_height, map_width, map_tileset)
 	return map
 end
 
+function convertTile2Walkable(tile, tileset)
+	dict = tileToWalkable[tileset]
+	if dict[tile] ~= nil then
+		return dict[tile]
+	end
+	return {[0] = 0, [1] = 0, [2] = 0, [3] = 0}
+end
+
+
+
+-- UTIL / DEBUG FUNCTIONS --
+
 function printMap(map_data, height, width) 
 	for i=0,height-1 do
 		s = ""
@@ -72,12 +111,4 @@ function printMap(map_data, height, width)
 		end
 		console.log(s)
 	end
-end
-
-function convertTile2Walkable(tile, tileset)
-	dict = tileToWalkable[tileset]
-	if dict[tile] ~= nil then
-		return dict[tile]
-	end
-	return {[0] = 0, [1] = 0, [2] = 0, [3] = 0}
 end

@@ -1,28 +1,27 @@
+my_room_pc = { [0] = 2, [1] = 0}
+my_room_stairs = { [0] = 1, [1] = 7}
+my_house_exit = {[0] = 7, [1] = 3}
+
+
+-- Pallet Town
+pallet_exit_grass = {[0] = 1, [1] = 10}
+pallet_route_1 = {[0]=0, [1] = 10}
+
+
+-- Oak's lab
+oak_lab_ball_1 = {[0] = 4, [1] =6}
+oak_lab_ball_2 = {[0] = 4, [1] =7}
+oak_lab_ball_3 = {[0] = 4, [1] =8}
+oak_lab_rival_fight = {[0]=6, [1] = 5}
+oak_lab_exit = {[0]= 11, [1] = 5}
+
+
+-- Route 1
+route_1_pallet = { [0] = 35, [1] = 10 }
+route_1_viridian = { [0] = 0, [1] = 11} 
+
 function route1_pallet_to_viridian()
-	turnAndTakeSteps(UP,8)
-	turnAndTakeSteps(LEFT,2)
-	turnAndTakeSteps(UP,6)
-	turnAndTakeSteps(RIGHT,4)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,7)
-	turnAndTakeSteps(RIGHT,5)
-	
-	-- Dodge the dude
-	cnt = 0
-	while memory.readbyte(SPRITE_X_POS_MEM + 0x10 * 2) == memory.readbyte(SPRITE_X_POS_MEM) do
-		turnAndTakeSteps(RIGHT,1)
-		cnt = cnt + 1
-	end
-	turnAndTakeSteps(UP,3)
-	while cnt > 0 do
-		cnt = cnt - 1
-		turnAndTakeSteps(LEFT,1)
-	end
-	
-	turnAndTakeSteps(UP,9)
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,10)
+	moveTo(route_1_viridian)
 end
 
 function route1_viridian_to_pallet_encounterless()
