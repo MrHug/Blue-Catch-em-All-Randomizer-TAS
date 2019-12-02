@@ -148,15 +148,19 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
 end
 
 function waitForNextTurn()
-	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
-		pressAndAdvance(B,2)
-		pressAndAdvance(DOWN, 4)
-	end
+
+  console.log("1")
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
 		pressAndAdvance(UP, 4)
 	end
+  console.log("2")  
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
+		pressAndAdvance(B,2)
+		pressAndAdvance(DOWN, 4)
+	end
+  console.log("3")  
+  while memory.readbyte(X_COORD_MENU_MEM) ~= 14 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
 		pressAndAdvance(DOWN, 4)
 	end
