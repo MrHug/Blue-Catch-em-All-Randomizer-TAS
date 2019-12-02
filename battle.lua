@@ -4,13 +4,14 @@ function battleTrainer()
   goToMenuItem(0)
   local numEnemyPoke = memory.readbyte(ENEMY_NUM_POKE_MEM)
 	while numEnemyPoke > 0 and myHP() > 0 do
-    logAll()
     goToMenuItem(0, B)
+    logAll(numEnemyPoke)
 		pressAndAdvance(A)
 		x=findAndPerformMostPowerfullMove()
     if enemyHP() == 0 then
       console.log("Killed enemy")
       numEnemyPoke = numEnemyPoke - 1
+      console.log(numEnemyPoke .. " pokes remaining")
     elseif myHP() == 0 then
       console.log("Got killed")
       if memory.readbyte(MY_NUM_OF_POKES) == 1 then
@@ -19,6 +20,7 @@ function battleTrainer()
       end
     end
   end
+  console.log("Battle is done!")
 	
 	while battleType() > 0 do
 		pressAndAdvance(B)
@@ -88,10 +90,7 @@ function throwPokeball()
 end
 
 function battleOpening()
-	while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 do
-		pressAndAdvance(A,2)
-		pressAndAdvance(DOWN, 4)
-	end
+	waitForNextTurn()
 end
 
 function mostPowerfullMoveID() 
@@ -122,8 +121,8 @@ end
 
 function findAndPerformMostPowerfullMove()
 	
-	y = mostPowerfullMoveID()
-	x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
+	local y = mostPowerfullMoveID()
+	local x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
 	while y ~= x do
 		pressAndAdvance(DOWN)
 		x = x + 1
@@ -137,12 +136,12 @@ function findAndPerformMostPowerfullMove()
 end
 
 function effectiveness(move_type, enemy_type1, enemy_type2)
-	factor = types_effectiveness[moveType][enemy_type1]
-	if factor == Nil then
+	local factor = types_effectiveness[moveType][enemy_type1]
+	if factor == nil then
 		factor = 1
 	end
-	factor2 = types_effectiveness[moveType][enemy_type2]
-	if factor2 == Nil then
+	local factor2 = types_effectiveness[moveType][enemy_type2]
+	if factor2 == nil then
 		factor2 = 1
 	end
 	return factor * factor2
@@ -153,6 +152,16 @@ function waitForNextTurn()
 		pressAndAdvance(B,2)
 		pressAndAdvance(DOWN, 4)
 	end
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
+		pressAndAdvance(B,2)
+		pressAndAdvance(UP, 4)
+	end
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
+		pressAndAdvance(B,2)
+		pressAndAdvance(DOWN, 4)
+	end
+  console.log("Next turn starting")
+  -- client.pause()
 end
 
 function enemyMaxHP() 
@@ -171,11 +180,12 @@ function enemyTypes()
 	return memory.readbyte(ENEMY_TYPE_1_MEM), memory.readbyte(ENEMY_TYPE_2_MEM)
 end
 
-function logAll()
+function logAll(numEnemyPoke)
 	console.log("##########")
 	console.log("Turn: " .. memory.readbyte(IN_BATTLE_TURNS_MEM))
 	logMe()
 	logEnemy()
+  console.log("Enemy still has " .. numEnemyPoke .. " poke alive")
 	console.log("##########")
 end
 

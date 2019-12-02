@@ -19,7 +19,7 @@ function main()
 	savestate.loadslot(0)
 	client.unpause()
 	while true do
-		walkTo(viridian_forest_tree_item)
+		walkTo(viridian_forest_north_entrance)
     
     --client.pause()
     break
