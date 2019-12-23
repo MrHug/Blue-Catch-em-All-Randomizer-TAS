@@ -32,6 +32,8 @@ viridian_route_1 = { [0] = 32, [1] = 21}
 
 route_2_viridian = { [0] = 71, [1] = 8}
 route_2_forest_viridian_side = { [0] = 44, [1] = 3}
+route_2_forest_pewter_side = { [0] = 11, [1] = 3}
+route_2_forest_pewter_side = { [0] = 0, [1] = 9}
 
 -- Viridian Forest
 
@@ -41,10 +43,66 @@ viridian_forest_south_entrance = { [0] = 47, [1] = 17}
 viridian_forest_tree_item = { [0] = 42, [1] = 15}
 viridian_forest_west_item = { [0] = 31, [1] = 2}
 viridian_forest_north_entrance = { [0] = 0, [1] = 1}
+viridian_forest_north_gate_pewter = { [0] = 0, [1] = 5}
+viridian_forest_north_gate_forest = { [0] = 7, [1] = 5}
+
+-- Pewter
+
+pewter_route_2 = { [0] = 35, [1] = 19 }
+pewter_center = { [0] = 26, [1] = 13}
+pewter_mart = { [0] = 18, [1] = 23}
+pewter_gym = { [0] = 18, [1] = 16}
+pewter_gym_brock = { [0] = 2, [1] = 4 }
+pewter_gym_exit = { [0] = 13, [1] = 4 }
+pewter_route_3 = { [0] = 17, [1] = 39 }
+
+-- Route 3
+
+route_3_pewter = { [0] = 9, [1] = 0}
+route_3_route_4 = { [0] = 0, [1] = 59}
+
+-- Route 4
+
+route_4_route_3 = { [0] = 17, [1] = 9}
+route_4_center = { [0] = 6, [1] = 11}
+route_4_moon_pewter_side = { [0] = 6, [1] = 18}
+route_4_moon_cerulean_side = { [0] = 6, [1] = 24}
+route_4_cerulean = { [0] = 10, [1] = 89}
+
+-- MT. Moon
+
+moon_route_4_entrance = { [0] = 35, [1] = 15 }
+moon_route_4_f1_top_left_stairs = { [0] = 4, [1] = 5 }
+moon_route_4_f2_top_left_in = { [0] = 5, [1] = 6 }
+moon_route_4_f2_top_left_out = { [0] = 17, [1] = 20 }
+moon_route_4_f3_mid_right = { [0] = 16, [1] = 21 }
+moon_route_4_f3_top_left_out = { [0] = 7, [1] = 4 }
+moon_route_4_f3_fossil = { [0] = 7, [1] = 13 }
+moon_route_4_f2_top_right_in = { [0] = 3, [1] = 24 }
+moon_route_4_f2_top_right_out = { [0] = 3, [1] = 26 }
+
+-- Cerulean
+
+cerulean_route_4 = { [0] = 18, [1] = 0}
+cerulean_center = { [0] = 18, [1] = 19}
+cerulean_gym = { [0] = 20, [1] = 30}
+cerulean_gym_misty = { [0] = 2, [1] = 5}
+cerulean_gym_exit = { [0] = 13, [1] = 5}
+cerulean_rival_encounter = { [0] = 6, [1] = 20}
+cerulean_route_24 = { [0] = 0, [1] = 20}
+
+-- Route 24
+
+route_24_cerulean = { [0] = 35, [1] = 10}
+route_24_route_25 = { [0] = 8, [1] = 19}
 
 -- Pokemarts
 pokemart_counter = { [0] = 5, [1] = 2}
 pokemart_exit = { [0] = 0, [1] = 5}
+
+-- Centers
+pokecenter_counter = {[0] = 3, [1] = 3}
+pokecenter_exit = {[0] = 7, [1] = 3}
 
 function route1_pallet_to_viridian()
 	moveTo(route_1_viridian)
@@ -159,4 +217,24 @@ function viridian_center_to_forest(pick_up)
 	turnAndTakeSteps(LEFT,7)
 	turnAndTakeSteps(UP)
 	transition()
+end
+
+function pewter_first_time()
+  walkTo(pewter_center)
+  healAndExit()
+  walkTo(pewter_gym)
+  turnAndTakeSteps(UP)
+  walkTo(pewter_gym_brock)
+  battleGymLeader()
+  mashTillTurned(DOWN)
+  walkTo(pewter_gym_exit)
+  turnAndTakeSteps(DOWN)
+  transition()
+  walkTo(pewter_center)
+  healAndExit()
+  walkTo(pewter_route_3)
+end
+
+function pewter_to_moon()
+  
 end

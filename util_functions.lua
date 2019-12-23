@@ -92,7 +92,7 @@ function checkInBattle()
 		console.log("Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
 		hadBattle = true
 		savestate.saveslot(8)
-    if battleType() == WILD_BATTLE then
+    if battleType() == BATTLE_WILD then
       battleWild()
     else 
       battleTrainer()
@@ -178,9 +178,9 @@ function countHighBits(inputByte)
 end
 
 function enterCenterAndHeal()
-	turnAndTakeSteps(UP,1)
+	turnAndTakeSteps(UP)
 	transition()
-	turnAndTakeSteps(UP,4)
+	walkTo(pokecenter_counter)
 	pressAndAdvance(A)
 	mashText(3)
 	pressAndAdvance(A)
@@ -188,7 +188,8 @@ function enterCenterAndHeal()
 end
 
 function exitCenterAfterHeal()
-	turnAndTakeSteps(DOWN,5)
+	walkTo(pokecenter_exit)
+  turnAndTakeSteps(DOWN)
 	transition()
 end
 
@@ -207,6 +208,19 @@ function mashTillTurned(dir)
 	end
 end
 
+function mashTillBattle(btn)
+	local cnt = 0
+	while memory.readbyte(IN_BATTLE_MEM) == 0 do
+		if cnt <= 1 then
+			pressButton(btn)
+		elseif cnt == 4 then
+			cnt = -1
+		end
+		cnt = cnt + 1
+		advanceFrame(1)
+	end
+end
+
 function lookForEncounter()
 	hadBattle = false
 	while hadBattle == false do
@@ -218,6 +232,12 @@ end
 function pickupItem(dir)
 	pressAndAdvance(A,1)
 	mashTillTurned(dir)
+end
+
+function pickupFossil()
+  mashText(15)
+  mashTillTurned(DOWN)
+  turnAndTakeSteps(UP)
 end
 
 function walkTo(dst, dir)
@@ -311,7 +331,7 @@ function findPath(src, dst, map)
           end
           
           -- It's a hop!
-          if curDir == DOWN and neighbour_value == -1 then
+          if curDir == DOWN and neighbour_value == -1 and map[neighbour[0] + 1] ~= nil then
               neighbour_value = map[neighbour[0]+1][neighbour[1]]
               neighbour[0] = neighbour[0] + 1
           end
@@ -330,7 +350,7 @@ function findPath(src, dst, map)
       end
       --logArray(queue)
       cnt = cnt + 1
-      if cnt > 750 then
+      if cnt > 1250 then
         console.log("TIMEOUT, got to (" .. cur_y .. "," .. cur_x .. ")")
         break
       end
@@ -414,4 +434,17 @@ end
 function printSrcDst(src, dst)
   console.log("Going from (" .. src[1] .. "," .. src[0] .. ")")
   console.log("Going to (" .. dst[1] .. "," .. dst[0] .. ")")
+end
+
+function healAndExit()
+  enterCenterAndHeal()
+  exitCenterAfterHeal()
+end
+
+
+function battleGymLeader()
+  pressAndAdvance(A)
+  mashTillBattle(B)
+  battleTrainer()
+  mashTillTurned(DOWN)
 end

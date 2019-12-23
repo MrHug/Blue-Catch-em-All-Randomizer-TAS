@@ -1,4 +1,5 @@
 function battleTrainer()
+  console.log("Fighting trainer")
 	battleOpening()
 	local result = true
   goToMenuItem(0)
@@ -7,7 +8,7 @@ function battleTrainer()
     goToMenuItem(0, B)
     logAll(numEnemyPoke)
 		pressAndAdvance(A)
-		x=findAndPerformMostPowerfullMove()
+		local x=findAndPerformMostPowerfullMove()
     if enemyHP() == 0 then
       console.log("Killed enemy")
       numEnemyPoke = numEnemyPoke - 1
@@ -30,8 +31,10 @@ function battleTrainer()
 end
 
 function battleWild()
+  console.log("Fighting wild")
 	battleOpening()
-	pokeball_id = hasPokeballs()
+	local pokeball_id = hasPokeballs()
+  goToMenuItem(0)
 	if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
 		console.log("Will try to run")
 		
@@ -40,11 +43,11 @@ function battleWild()
 		end
 	else 
 		while enemyHP() > 0 and myHP() > 0 do
-			logAll()
+			logAll(1)
 			if enemyHP() > enemyMaxHP() / 2 then 
 				goToMenuItem(0)
 				pressAndAdvance(A)
-				x=findAndPerformMostPowerfullMove()
+				local x=findAndPerformMostPowerfullMove()
 			else 
 				if throwPokeball() then
 					while battleType() ~= 0 do
@@ -90,7 +93,11 @@ function throwPokeball()
 end
 
 function battleOpening()
-	waitForNextTurn()
+  waitForNextTurn()
+	 while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
+		pressAndAdvance(B,2)
+    pressAndAdvance(UP,2)
+	end
 end
 
 function mostPowerfullMoveID() 
@@ -149,22 +156,16 @@ end
 
 function waitForNextTurn()
 
-  console.log("1")
+  console.log("Waiting for next turn")
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 and myHP() > 0 and battleType() > 0 do
+		pressAndAdvance(B,2)
+    pressAndAdvance(DOWN,2)
+	end
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
-		pressAndAdvance(UP, 4)
+    pressAndAdvance(UP,2)
 	end
-  console.log("2")  
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
-		pressAndAdvance(B,2)
-		pressAndAdvance(DOWN, 4)
-	end
-  console.log("3")  
-  while memory.readbyte(X_COORD_MENU_MEM) ~= 14 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
-		pressAndAdvance(B,2)
-		pressAndAdvance(DOWN, 4)
-	end
-  console.log("Next turn starting")
+  console.log("Next turn starting" .. enemyHP() .. "," .. myHP() .. "," .. battleType())
   -- client.pause()
 end
 
