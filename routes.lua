@@ -69,6 +69,26 @@ route_4_moon_pewter_side = { [0] = 6, [1] = 18}
 route_4_moon_cerulean_side = { [0] = 6, [1] = 24}
 route_4_cerulean = { [0] = 10, [1] = 89}
 
+
+-- Route 5
+route_5_cerulean = { [0] = 0, [1] = 17}
+route_5_underground = { [0] = 28, [1] = 17}
+route_5_gate = { [0] = 29, [1] = 10}
+route_5_underground_house_exit = {[0] = 7, [1] = 3}
+route_5_underground_house_down = {[0] = 4, [1] = 3}
+
+-- Underground North/South
+
+underground_north_south_north = { [0] = 4, [1] = 4}
+underground_north_south_south = { [0] = 41, [1] = 3}
+
+-- Route 6
+route_6_vermillion = { [0] = 35, [1] = 9}
+route_6_underground = { [0] = 14, [1] = 17}
+route_6_gate = { [0] = 8, [1] = 10}
+route_6_underground_house_exit = {[0] = 7, [1] = 3}
+route_6_underground_house_down = {[0] = 4, [1] = 3}
+
 -- MT. Moon
 
 moon_route_4_entrance = { [0] = 35, [1] = 15 }
@@ -90,7 +110,19 @@ cerulean_gym_misty = { [0] = 2, [1] = 5}
 cerulean_gym_exit = { [0] = 13, [1] = 5}
 cerulean_rival_encounter = { [0] = 6, [1] = 20}
 cerulean_route_24 = { [0] = 0, [1] = 20}
-cerulean_dig_house_entrance = {[0] = 12, [1] = 27}
+cerulean_dig_house_entrance = {[0] = 12, [1] = 26} -- This is one place to the left, as the invisible guard is still there!
+cerulean_route_5 = {[0] = 35, [1] = 27} 
+
+
+-- Cerulean trashed house
+
+cerulean_trashed_house_entrance = { [0] = 7, [1] = 3}
+cerulean_trashed_house_exit = { [0] = 1, [1] = 3}
+
+-- Vermillion
+
+vermillion_center = { [0] = 4, [1] = 11}
+
 
 -- Route 24
 
@@ -100,7 +132,7 @@ route_24_route_25 = { [0] = 8, [1] = 19}
 
 -- Route 25
 
-route_25_bills_house = { [0] = 2, [1] = 45}
+route_25_bills_house = { [0] = 4, [1] = 45}
 route_25_route_24 = { [0] = 8, [1] = 0}
 route_25_route_24_lower_exit = { [0] = 11, [1] = 0}
 
@@ -251,12 +283,21 @@ function pewter_first_time()
 end
 
 function doNuggetBridge()
+  walkTo(cerulean_route_24)
+  log(L_DEBUG, "At Route 24")
+  turnAndTakeSteps(UP)
   walkTo(route_24_route_25)
+  log(L_DEBUG, "At Route 25")
   turnAndTakeSteps(RIGHT)
   walkTo(route_25_bills_house)
+  log(L_DEBUG, "At Bills House")
   turnAndTakeSteps(UP)
   transition()
   doBillCutScene()
+  walkTo(route_25_route_24_lower_exit)
+  turnAndTakeSteps(LEFT)
+  walkTo(route_24_cerulean_bill_exit)
+  turnAndTakeSteps(DOWN)
 end
 
 function doBillCutScene()
@@ -274,4 +315,40 @@ function doBillCutScene()
   walkTo(bills_house_exit)
   turnAndTakeSteps(DOWN)
   transition()
+end
+
+function throughTrashedHouse()
+	walkTo(cerulean_dig_house_entrance)
+	turnAndTakeSteps(RIGHT)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(cerulean_trashed_house_exit)
+	turnAndTakeSteps(UP)
+	transition()
+	turnAndTakeSteps(RIGHT)
+end
+
+function ceruleanToViridian()
+	-- In Cerulean (outside of dig house?)
+	walkTo(cerulean_route_5)
+	turnAndTakeSteps(DOWN)
+	-- On route 5
+	walkTo(route_5_underground)
+	turnAndTakeSteps(UP)
+	transition()
+	-- In the underground house
+	walkTo(route_5_underground_house_down)
+	turnAndTakeSteps(RIGHT)
+	transition()
+	-- In the actual underground
+	walkTo(underground_north_south_south)
+	turnAndTakeSteps(LEFT)
+	transition()
+	-- Exit the other underground house
+	walkTo(route_6_underground_house_exit)
+	turnAndTakeSteps(DOWN)
+	transition()
+	-- On route 6
+	walkTo(route_6_vermillion)
+	turnAndTakeSteps(DOWN)
 end

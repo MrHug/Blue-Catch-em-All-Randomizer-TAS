@@ -4,6 +4,7 @@ Let's see if we can build a TAS for a catch em all randomizer run
 
 Videos with project history:
 
+- [Video 8](https://youtu.be/PCz3qZjVgDI): Rescuing Bill
 - [Video 7](https://www.youtube.com/watch?v=kOu81dPpMwo)
 - [Video 6](https://www.youtube.com/watch?v=nXxCHejzz2M)
 - [Video 5](https://www.youtube.com/watch?v=XIK0tuLEh00)

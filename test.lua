@@ -18,17 +18,20 @@ require "log"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(1)
-	--savestate.loadslot(2)
-
-	set_loglevel(L_VERBOSE)
+	-- savestate.loadslot(1)
+	-- savestate.loadslot(2)
+	savestate.loadslot(0)
+	set_loglevel(L_DEBUG)
 	client.unpause()
 	while true do
     
 		printStatus()
-		
-		getPCPotion()
-		--savestate.saveslot(1)
+		doNuggetBridge()
+		walkTo(cerulean_center)
+		healAndExit()
+		throughTrashedHouse()
+		ceruleanToViridian()
+		savestate.saveslot(1)
 		-- savestate.saveslot(2)
 		break
 	end
