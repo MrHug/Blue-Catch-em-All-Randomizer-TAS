@@ -18,16 +18,13 @@ require "log"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(3)
+	savestate.loadslot(5)
 	--savestate.loadslot(2)
 
 	set_loglevel(L_VERBOSE)
 	client.unpause()
 	while true do
-		waitForRival()
-		battleRival()
-		log(L_DEBUG, "Exiting lab")
-		exitLabAfterRivalFight()
+		route1_pallet_to_viridian()
 		break
 	end
   client.pause()

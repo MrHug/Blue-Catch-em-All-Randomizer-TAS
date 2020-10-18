@@ -120,11 +120,13 @@ pokecenter_counter = {[0] = 3, [1] = 3}
 pokecenter_exit = {[0] = 7, [1] = 3}
 
 function route1_pallet_to_viridian()
-	moveTo(route_1_viridian)
+	log(L_VERBOSE, "Enter route1_pallet_to_viridian")
+	walkTo(route_1_viridian)
 end
 
 function route1_viridian_to_pallet_encounterless()
-	moveTo(route_1_pallet)
+	log(L_VERBOSE, "Enter route1_viridian_to_pallet_encounterles")
+	walkTo(route_1_pallet)
 end
 
 function viridian_entrace_to_mart()
