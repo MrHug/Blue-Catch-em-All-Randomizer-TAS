@@ -96,6 +96,11 @@ cerulean_route_24 = { [0] = 0, [1] = 20}
 route_24_cerulean = { [0] = 35, [1] = 10}
 route_24_route_25 = { [0] = 8, [1] = 19}
 
+-- Route 25
+
+route_25_bills_house = { [0] = 3, [1] = 45}
+route_25_route_24 = { [0] = 8, [1] = 0}
+
 -- Pokemarts
 pokemart_counter = { [0] = 5, [1] = 2}
 pokemart_exit = { [0] = 0, [1] = 5}
@@ -235,6 +240,8 @@ function pewter_first_time()
   walkTo(pewter_route_3)
 end
 
-function pewter_to_moon()
-  
+function doNuggetBridge()
+  walkTo(route_24_route_25)
+  turnAndTakeSteps(RIGHT)
+  walkTo(route_25_bills_house)
 end
