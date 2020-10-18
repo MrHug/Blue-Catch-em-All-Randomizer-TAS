@@ -10,21 +10,24 @@ package.loaded["start_game"] = nil
 require "start_game"
 package.loaded["new_game"] = nil
 require "new_game"
+package.loaded["log"] = nil
+require "log"
 
 
 
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	-- savestate.loadslot(1)
+	savestate.loadslot(1)
 	--savestate.loadslot(2)
-	savestate.loadslot(8)
+
+	set_loglevel(L_VERBOSE)
 	client.unpause()
 	while true do
     
 		printStatus()
 		
-		checkInBattle()
+		getPCPotion()
 		--savestate.saveslot(1)
 		-- savestate.saveslot(2)
 		break
