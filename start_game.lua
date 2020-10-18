@@ -123,21 +123,17 @@ function waitForRival()
 end
 
 function battleRival()
+	log(L_VERBOSE, "Entering battleRival")
 	--savestate.loadslot(6)
 	turnAndTakeSteps(DOWN)
-	advanceFrame(15)
-	mashText(4)
-	advanceFrame(78)
-	battleTrainer()
+	log(L_VERBOSE, "Exiting battleRival")
 end
 
 function exitLabAfterRivalFight()
-	advanceFrame(50)
-	mashText(5)
-	advanceFrame(205) -- Rival walks out
 	walkTo(oak_lab_exit)
-  turnAndTakeSteps(DOWN)
-  transition()
+    turnAndTakeSteps(DOWN)
+    transition()
+    log(L_VERBOSE, "Exit exitLabAfterRivalFight")
 end
 
 function getOaksParcel()
