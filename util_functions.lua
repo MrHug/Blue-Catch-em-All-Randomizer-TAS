@@ -2,6 +2,8 @@ package.loaded["mart"] = nil
 require "mart"
 package.loaded["map_reading"] = nil
 require "map_reading"
+package.loaded["locationsmapping"] = nil
+require "locationsmapping"
 
 PriorityQueue = dofile("priorityqueue.lua")
 
@@ -447,4 +449,40 @@ function battleGymLeader()
   mashTillBattle(B)
   battleTrainer()
   mashTillTurned(DOWN)
+end
+
+function printStatus()
+	local badges = getBadges()
+	console.log("Badges obtained: ")
+	console.log(badges)
+	
+	local pos, mapnum = getLocation()
+	
+	console.log("Location: ")
+	console.log(pos)
+	console.log(mapnum_to_location[mapnum])
+end
+
+function getLocation()
+	local _, _, pos = getMyPos()
+	local mapnum =  memory.readbyte(MAP_NUM_MEM)
+	return pos, mapnum
+end
+
+function getBadges()
+	local badgesMem = memory.readbyte(BADGES_MEM)
+	local badges = {}
+	local p = 128
+	local cnt = 8
+	while badgesMem > 0 do
+		if badgesMem >= p then
+			badgesMem = badgesMem - p
+			badges[cnt] = 1
+		else
+			badges[cnt] = 0
+		end
+		cnt = cnt - 1
+		p = p / 2
+	end
+	return badges
 end

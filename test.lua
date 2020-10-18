@@ -16,16 +16,16 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	--savestate.loadslot(1)
+	-- savestate.loadslot(1)
+	savestate.loadslot(2)
 	client.unpause()
 	while true do
-    savestate.loadslot(0)
-    walkTo(cerulean_center)
-    healAndExit()
-    walkTo(cerulean_route_24)
-    turnAndTakeSteps(UP)
-    walkTo(route_24_route_25)
-    savestate.saveslot(9)
+    
+    printStatus()
+	turnAndTakeSteps(RIGHT)
+	walkTo(route_25_bills_house)
+	savestate.saveslot(1)
+	-- savestate.saveslot(2)
     break
 	end
   client.pause()
