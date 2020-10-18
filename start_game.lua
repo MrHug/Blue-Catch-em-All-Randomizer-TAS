@@ -49,6 +49,7 @@ function getPCPotion()
 end
 
 function enterItemBoxFromHomePC()
+	log(L_DEBUG, "Opening PC menu")
 	pressAndAdvance(A,10) -- Open Menu
 	mashText(4)
 	advanceFrame(38)
