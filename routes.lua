@@ -98,8 +98,15 @@ route_24_route_25 = { [0] = 8, [1] = 19}
 
 -- Route 25
 
-route_25_bills_house = { [0] = 3, [1] = 45}
+route_25_bills_house = { [0] = 2, [1] = 45}
 route_25_route_24 = { [0] = 8, [1] = 0}
+
+-- Bills House
+
+bills_house_pre_machine_bill = { [0] = 6, [1] = 6}
+bills_house_post_machine_bill = { [0] = 5, [1] = 4}
+bills_house_pc = { [0] = 5, [1] = 1}
+bills_house_exit = { [0] = 7, [1] = 3}
 
 -- Pokemarts
 pokemart_counter = { [0] = 5, [1] = 2}
@@ -244,4 +251,24 @@ function doNuggetBridge()
   walkTo(route_24_route_25)
   turnAndTakeSteps(RIGHT)
   walkTo(route_25_bills_house)
+  turnAndTakeSteps(UP)
+  transition()
+  doBillCutScene()
+end
+
+function doBillCutScene()
+  walkTo(bills_house_pre_machine_bill)
+  turn(UP)
+  pressAndAdvance(A)
+  mashTillTurned(LEFT)
+  walkTo(bills_house_pc)
+  pressAndAdvance(A)
+  mashTillTurned(RIGHT)
+  walkTo(bills_house_post_machine_bill)
+  turn(UP)
+  pressAndAdvance(A)
+  mashTillTurned(DOWN)
+  walkTo(bills_house_exit)
+  turnAndTakeSteps(DOWN)
+  transition()
 end

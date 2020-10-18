@@ -50,7 +50,9 @@ end
 
 function turn(dir)
 	local cnt = 0
+	local waittime = 0
 	while memory.readbyte(MY_DIR_MEM) ~= dir_map[dir] do
+		waittime = waittime + 1
 		if cnt == 0 then
 			pressButton(dir)
 		elseif cnt == 2 then
@@ -59,13 +61,22 @@ function turn(dir)
 		cnt = cnt + 1
 		advanceFrame(1)
 		checkInBattle()
+		if waittime > 20 then
+			return false
+		end
 	end
+	return true
 end
 
 function turnAndTakeSteps(dir, steps)
 	steps = steps or 1
-	turn(dir)
-	takeSteps(dir, steps)
+	if not turn(dir) then
+		return false
+	end
+	if not takeSteps(dir, steps) then
+		return false
+	end
+	return true
 end
 
 function takeSteps(dir, steps)
@@ -81,11 +92,14 @@ function takeSteps(dir, steps)
 			checkInBattle()
 		end
 	end
+	return true
 end
 
 
 function takeHop(dir)
-	takeSteps(dir,1)
+	if not takeSteps(dir,1) then
+		return false
+	end
 	checkInBattle()
 end
 
@@ -94,12 +108,14 @@ function checkInBattle()
 		console.log("Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
 		hadBattle = true
 		savestate.saveslot(8)
-    if battleType() == BATTLE_WILD then
-      battleWild()
-    else 
-      battleTrainer()
-    end
+		if battleType() == BATTLE_WILD then
+		  battleWild()
+		else 
+		  battleTrainer()
+		end
+		return true
 	end
+	return false
 end
 
 function goToMenuItem(id, additional_button)
@@ -203,7 +219,9 @@ function mashTillTurned(dir)
 		elseif cnt == 4 then
 			cnt = -1
 		end
-		pressButton(B)
+		if cnt % 2 == 0 then
+			pressButton(B)
+		end
 		cnt = cnt + 1
 		advanceFrame(1)
 		checkInBattle()
@@ -401,18 +419,37 @@ end
 
 function walkPath(path)
 	local my_y, my_x, src = getMyPos()
+	
   for i,v in ipairs(path) do
 			
-		local dir = getDir(src, v)
+	local dir = getDir(src, v)
     if dir then
-      turnAndTakeSteps(dir)
+      if not turnAndTakeSteps(dir) then
+		console.log("Something interrupted! Checking if it is trainer")
+		local cnt = 0
+		while cnt < 20 do
+			pressAndAdvance(B)
+			if checkInBattle() then
+				return false -- We got interrupted while walking somewhere, better to replan!
+			end
+			cnt = cnt + 1
+		end
+		if not turn(dir) then 
+			console.log("Mashing didn't help!")
+			printSrcDst(src,v)
+			return false
+		end
+	  end
     end
     
   	my_y , my_x, src = getMyPos()
     local cnt = 0
+	-- console.log(my_y,my_x,v[0],v[1])
+	-- console.log(my_x ~= v[1] or my_y ~= v[0])
     while (my_x ~= v[1] or my_y ~= v[0]) do
       advanceFrame(1)
       cnt = cnt + 1
+	  console.log(cnt)
       if (cnt > 20) then
         console.log("-----")
         console.log("Path interrupted when:")
