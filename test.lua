@@ -20,16 +20,16 @@ function main()
 	console.clear()
 	savestate.loadslot(1)
 	--savestate.loadslot(2)
-
+	--savestate.loadslot(8)
 	set_loglevel(L_VERBOSE)
 	client.unpause()
 	while true do
     
 		printStatus()
 		
-		getPCPotion()
-		--savestate.saveslot(1)
-		-- savestate.saveslot(2)
+		walkTo(cerulean_route_5)
+		-- savestate.saveslot(1)
+		savestate.saveslot(2)
 		break
 	end
   client.pause()

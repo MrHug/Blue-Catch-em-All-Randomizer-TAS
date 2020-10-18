@@ -90,7 +90,15 @@ cerulean_gym_misty = { [0] = 2, [1] = 5}
 cerulean_gym_exit = { [0] = 13, [1] = 5}
 cerulean_rival_encounter = { [0] = 6, [1] = 20}
 cerulean_route_24 = { [0] = 0, [1] = 20}
-cerulean_dig_house_entrance = {[0] = 12, [1] = 27}
+cerulean_dig_house_entrance = {[0] = 12, [1] = 26} -- This is one place to the left, as the invisible guard is still there!
+cerulean_route_5 = {[0] = 28, [1] = 9} 
+--cerulean_route_5 = {[0] = 35, [1] = 27} 
+
+
+-- Cerulean trashed house
+
+cerulean_trashed_house_entrance = { [0] = 7, [1] = 3}
+cerulean_trashed_house_exit = { [0] = 1, [1] = 3}
 
 -- Route 24
 
@@ -274,4 +282,10 @@ function doBillCutScene()
   walkTo(bills_house_exit)
   turnAndTakeSteps(DOWN)
   transition()
+end
+
+function throughTrashedHouse()
+	walkTo(cerulean_trashed_house_exit)
+	turnAndTakeSteps(UP)
+	transition()
 end
