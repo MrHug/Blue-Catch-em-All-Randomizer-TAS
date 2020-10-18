@@ -45,6 +45,7 @@ end
 
 function getPCPotion()
 	walkTo(my_room_pc)
+	turn(UP)
 	enterItemBoxFromHomePC()
 end
 
