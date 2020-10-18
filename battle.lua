@@ -27,6 +27,7 @@ function battleTrainer()
 		pressAndAdvance(B)
 	end
 	advanceFrame(30)
+	log(L_DEBUG, "Exiting battleTrainer")
 	return result
 end
 

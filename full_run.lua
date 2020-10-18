@@ -10,6 +10,8 @@ package.loaded["new_game"] = nil
 require "new_game"
 package.loaded["start_game"] = nil
 require "start_game"
+package.loaded["log"] = nil
+require "log"
 
 
 function main()
