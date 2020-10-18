@@ -16,16 +16,18 @@ require "new_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	savestate.loadslot(1)
-	-- savestate.loadslot(2)
+	-- savestate.loadslot(1)
+	--savestate.loadslot(2)
+	savestate.loadslot(8)
 	client.unpause()
 	while true do
     
-    printStatus()
-	doBillCutScene()
-	-- savestate.saveslot(1)
-	savestate.saveslot(2)
-    break
+		printStatus()
+		
+		checkInBattle()
+		--savestate.saveslot(1)
+		-- savestate.saveslot(2)
+		break
 	end
   client.pause()
 end

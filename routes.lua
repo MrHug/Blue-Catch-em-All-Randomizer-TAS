@@ -90,16 +90,19 @@ cerulean_gym_misty = { [0] = 2, [1] = 5}
 cerulean_gym_exit = { [0] = 13, [1] = 5}
 cerulean_rival_encounter = { [0] = 6, [1] = 20}
 cerulean_route_24 = { [0] = 0, [1] = 20}
+cerulean_dig_house_entrance = {[0] = 12, [1] = 27}
 
 -- Route 24
 
 route_24_cerulean = { [0] = 35, [1] = 10}
+route_24_cerulean_bill_exit = { [0] = 35, [1] = 14}
 route_24_route_25 = { [0] = 8, [1] = 19}
 
 -- Route 25
 
 route_25_bills_house = { [0] = 2, [1] = 45}
 route_25_route_24 = { [0] = 8, [1] = 0}
+route_25_route_24_lower_exit = { [0] = 11, [1] = 0}
 
 -- Bills House
 

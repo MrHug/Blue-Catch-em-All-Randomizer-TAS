@@ -339,6 +339,9 @@ function findPath(src, dst, map)
         neighbour = {[0] = cur_y + x_dir[i], [1] = cur_x + y_dir[i]}
         if map[neighbour[0]] == nil or map[neighbour[0]][neighbour[1]] == nil or visited[neighbour[0]][neighbour[1]] == 1 then -- Impossible spot or already done
           -- Pass
+		  if neighbour[0] == 12 and neighbour[1] == 27 then
+			console.log(neighbour[0], neighbour[1])
+		  end
         else 			
           local neighbour_value = map[neighbour[0]][neighbour[1]]
           
