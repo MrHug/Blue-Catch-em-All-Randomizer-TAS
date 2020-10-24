@@ -99,7 +99,7 @@ function input_aurei()
 	pressAndAdvance(A,10) -- E
 	
 	goDir(RIGHT,4)
-	pressAndAdvance(A,10) -- E
+	pressAndAdvance(A,10) -- I
 
 	pressAndAdvance(START,30)
 end

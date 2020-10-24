@@ -4,6 +4,8 @@ package.loaded["map_reading"] = nil
 require "map_reading"
 package.loaded["locationsmapping"] = nil
 require "locationsmapping"
+package.loaded["log"] = nil
+require "log"
 
 PriorityQueue = dofile("priorityqueue.lua")
 
@@ -264,7 +266,7 @@ function walkTo(dst, dir)
   local myY, myX, src = getMyPos()
   local cnt = 0
   while myX ~= dst[1] or myY ~= dst[0] do
-    printSrcDst(src, dst)
+    logSrcDst(L_VERBOSE, src, dst)
     local a = findPathFromCurPos(dst)
     if a and #a > 0 then
       if not walkPath(a) then
@@ -274,7 +276,7 @@ function walkTo(dst, dir)
         return false
       end
     else 
-      console.log("Error: no path found!")
+      log(L_ERROR,"Error: no path found!")
       return false
     end
     myY, myX, src = getMyPos()
@@ -374,7 +376,7 @@ function findPath(src, dst, map)
       --logArray(queue)
       cnt = cnt + 1
       if cnt > 1250 then
-        console.log("TIMEOUT, got to (" .. cur_y .. "," .. cur_x .. ")")
+        log(L_ERROR,"TIMEOUT, got to (" .. cur_y .. "," .. cur_x .. ")")
         break
       end
     end
@@ -438,8 +440,8 @@ function walkPath(path)
 			cnt = cnt + 1
 		end
 		if not turn(dir) then 
-			console.log("Mashing didn't help!")
-			printSrcDst(src,v)
+			log(L_ERROR,"Mashing didn't help!")
+			logSrcDSt(L_ERROR, src,v)
 			return false
 		end
 	  end
@@ -452,12 +454,12 @@ function walkPath(path)
     while (my_x ~= v[1] or my_y ~= v[0]) do
       advanceFrame(1)
       cnt = cnt + 1
-	  console.log(cnt)
+	  log(L_VERBOSE, "Seem to be stuck: ", cnt)
       if (cnt > 20) then
-        console.log("-----")
-        console.log("Path interrupted when:")
-        printSrcDst(src, v)
-        console.log("-----")
+        log(L_ERROR, "-----")
+        log(L_ERROR, "Path interrupted when:")
+        logSrcDst(L_ERROR, src, v)
+        log(L_ERROR, "-----")
         return false
       end
     end
@@ -473,9 +475,9 @@ function getMyPos()
   return src[0], src[1], src
 end
 
-function printSrcDst(src, dst)
-  console.log("Going from (" .. src[1] .. "," .. src[0] .. ")")
-  console.log("Going to (" .. dst[1] .. "," .. dst[0] .. ")")
+function logSrcDst(level, src, dst)
+  log(level, "Going from (" .. src[1] .. "," .. src[0] .. ")")
+  log(level, "Going to (" .. dst[1] .. "," .. dst[0] .. ")")
 end
 
 function healAndExit()
@@ -525,4 +527,14 @@ function getBadges()
 		p = p / 2
 	end
 	return badges
+end
+
+function runFromSaveSlotToSaveSlot(slot1, func, slot2)
+	log(L_DEBUG,"Loading from slot " .. slot_2)
+	client.loadstate(slot1)
+	client.unpause()
+	func()
+	log(L_DEBUG,"Saving to slot " .. slot_2)
+	client.savestate(slot2)
+	client.pause()
 end

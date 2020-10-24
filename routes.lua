@@ -22,6 +22,7 @@ route_1_viridian = { [0] = 0, [1] = 11}
 
 -- Viridian
 
+viridian_cut_bush = { [0] = 4, [1] = 14}
 viridian_center = { [0] = 26, [1] = 23}
 viridian_mart = { [0] = 20, [1] = 29}
 viridian_route_2 = { [0] = 0, [1] = 18}
@@ -33,7 +34,7 @@ viridian_route_1 = { [0] = 32, [1] = 21}
 route_2_viridian = { [0] = 71, [1] = 8}
 route_2_forest_viridian_side = { [0] = 44, [1] = 3}
 route_2_forest_pewter_side = { [0] = 11, [1] = 3}
-route_2_forest_pewter_side = { [0] = 0, [1] = 9}
+route_2_pewter = { [0] = 0, [1] = 9}
 
 -- Viridian Forest
 
@@ -41,6 +42,9 @@ viridian_forest_south_gate_viridian = {[0] = 7, [1] = 5}
 viridian_forest_south_gate_forest = {[0] = 1, [1] = 5}
 viridian_forest_south_entrance = { [0] = 47, [1] = 17}
 viridian_forest_tree_item = { [0] = 42, [1] = 15}
+viridian_forest_right_item = { [0] = 11, [1] = 25}
+viridian_forest_middle_item = { [0] = 12, [1] = 29}
+viridian_forest_in_front_of_trainer = { [0] = 18, [1] = 1}
 viridian_forest_west_item = { [0] = 31, [1] = 2}
 viridian_forest_north_entrance = { [0] = 0, [1] = 1}
 viridian_forest_north_gate_pewter = { [0] = 0, [1] = 5}
@@ -162,21 +166,11 @@ function route1_viridian_to_pallet_encounterless()
 end
 
 function viridian_entrace_to_mart()
-	turnAndTakeSteps(LEFT,2)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(RIGHT,4)
-	-- Check if Center is needed
-	turnAndTakeSteps(RIGHT,3)
-	turnAndTakeSteps(UP,6)
-	turnAndTakeSteps(RIGHT,3)
-	turnAndTakeSteps(UP,1)
+	walkTo(viridian_center)
+	healAndExit()
+	walkTo(viridian_entrace_to_mart)
+	turnAndTakeSteps(UP)
 	transition()
-end
-
-function viridian_entrace_to_pokecenter()
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(RIGHT,4)
 end
 
 function viridian_center_to_route1catching()
@@ -189,81 +183,72 @@ function viridian_center_to_route1catching()
 end
 
 function route1catching_to_viridian_center()
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(LEFT,4)
-	turnAndTakeSteps(UP,12)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(RIGHT,4)
+	walkTo(route_1_viridian)
 end
 
 function viridian_mart_to_entrance()
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(DOWN,6)
-	takeHop(DOWN)
-	takeSteps(DOWN,2)
-	turnAndTakeSteps(LEFT,5)
+	walkTo(viridian_route_1)
 end
 
 function pallet_entrance_to_lab()
-	takeSteps(DOWN,5)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(DOWN,5)
-	turnAndTakeSteps(RIGHT,3)
+	walkTo(pallet_entrance_to_lab)
 	turnAndTakeSteps(UP,1)
 	transition()
 end
 
 function lab_to_pallet_entrance()
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,10)
-	turnAndTakeSteps(RIGHT,1)
-	turn(UP)
+	walkTo(pallet_route_1)
 end
 
 function oaks_lab_behind_oak()
-	takeSteps(UP,8)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(RIGHT,1)
+	walkTo(oaks_lab_behind_oak)
 	turn(DOWN)
 end
 
 function behind_oak_exit_lab()
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(DOWN,11)
+	walkTo(oak_lab_exit)
+	turnAndTakeSteps(DOWN)
 	transition()
 end
 
 function viridian_center_to_forest(pick_up)
-	turnAndTakeSteps(LEFT,4)
-	turnAndTakeSteps(UP,20)
-	-- Dodge the dude
-	cnt = 0
-	while memory.readbyte(SPRITE_X_POS_MEM + 0x10 * 7) == memory.readbyte(SPRITE_X_POS_MEM) do
-		turnAndTakeSteps(LEFT,1)
-		cnt = cnt + 1
-	end
-	turnAndTakeSteps(UP,2)
-	while cnt > 0 do
-		cnt = cnt - 1
-		turnAndTakeSteps(RIGHT,1)
-	end
-	if pick_up then
-		turnAndTakeSteps(LEFT,4)
+	if (pick_up) then
+		walkTo(viridian_cut_bush)
+		turn(LEFT)
 		pickupItem(RIGHT)
-		turnAndTakeSteps(RIGHT,3)
-	else 
-		turnAndTakeSteps(LEFT)
 	end
-	turnAndTakeSteps(UP,14)
-	turnAndTakeSteps(LEFT)
-	turnAndTakeSteps(UP,5)
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,5)
-	turnAndTakeSteps(RIGHT,6)
-	turnAndTakeSteps(UP,8)
-	turnAndTakeSteps(LEFT,7)
+	walkTo(viridian_center_to_forest)
+	turnAndTakeSteps(UP)
+	walkTo(route_2_forest_viridian_side)
+	turnAndTakeSteps(UP)
+	transition()
+end
+
+function viridian_forest_up(pick_up)
+	walkTo(viridian_forest_south_gate_forest)
+	turnAndTakeSteps(UP)
+	transition()
+	if (pick_up) then
+		walkTo(viridian_forest_tree_item)
+		turn(RIGHT)
+		pickupItem(LEFT)
+		walkTo(viridian_forest_west_item)
+		turn(LEFT)
+		pickupItem(RIGHT)
+		walkTo(viridian_forest_right_item)
+		turn(UP)
+		pickupItem(RIGHT)
+		walkTo(viridian_forest_middle_item)
+		turn(DOWN)
+		pickupItem(UP)
+		walkTo(viridian_forest_in_front_of_trainer)
+		turn(UP)
+		pickupItem(DOWN)
+	end
+	walkTo(viridian_forest_north_entrance)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(viridian_forest_north_gate_pewter)
 	turnAndTakeSteps(UP)
 	transition()
 end

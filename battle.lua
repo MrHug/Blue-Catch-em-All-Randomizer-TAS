@@ -1,27 +1,27 @@
 function battleTrainer()
-  console.log("Fighting trainer")
+  log(L_INFO, "Fighting trainer")
 	battleOpening()
 	local result = true
   goToMenuItem(0)
   local numEnemyPoke = memory.readbyte(ENEMY_NUM_POKE_MEM)
 	while numEnemyPoke > 0 and myHP() > 0 do
     goToMenuItem(0, B)
-    logAll(numEnemyPoke)
+    logAll(L_VERBOSE, numEnemyPoke)
 		pressAndAdvance(A)
 		local x=findAndPerformMostPowerfullMove()
     if enemyHP() == 0 then
-      console.log("Killed enemy")
+      log(L_DEBUG, "Killed enemy")
       numEnemyPoke = numEnemyPoke - 1
-      console.log(numEnemyPoke .. " pokes remaining")
+      log(L_DEBUG, numEnemyPoke .. " pokes remaining")
     elseif myHP() == 0 then
       console.log("Got killed")
       if memory.readbyte(MY_NUM_OF_POKES) == 1 then
-        console.log("Lost all pokes")
+        log(L_ERROR, "Lost all pokes")
         result = false
       end
     end
   end
-  console.log("Battle is done!")
+  log(L_INFO, "Battle is done!")
 	
 	while battleType() > 0 do
 		pressAndAdvance(B)
@@ -32,7 +32,7 @@ function battleTrainer()
 end
 
 function battleWild()
-  console.log("Fighting wild")
+  log(L_INFO, "Fighting wild")
 	battleOpening()
 	local pokeball_id = hasPokeballs()
   goToMenuItem(0)
@@ -44,7 +44,7 @@ function battleWild()
 		end
 	else 
 		while enemyHP() > 0 and myHP() > 0 do
-			logAll(1)
+			logAll(L_VERBOSE_,1)
 			if enemyHP() > enemyMaxHP() / 2 then 
 				goToMenuItem(0)
 				pressAndAdvance(A)
@@ -74,7 +74,7 @@ function battleWild()
 end
 
 function throwPokeball()
-	console.log("Trying to throw Pokeball")
+	log(L_VERBOSE, "Trying to throw Pokeball")
 	before = totalOwned()
 	goToMenuItem(1)
 	index = findItemInInventory(POKEBALL_ID)
@@ -85,8 +85,8 @@ function throwPokeball()
 	advanceFrame(400)
 	mashText(5)
 	if totalOwned() > before then
-		console.log("Caught it!")
-		console.log("Now own: " .. totalOwned())
+		log(L_VERBOSE, "Caught it!")
+		log(L_DEBUG, "Now own: " .. totalOwned())
 		mashText(5)
 		return true
 	end
@@ -118,11 +118,11 @@ function mostPowerfullMoveID()
 			mostPower = combined
 			index = i
 		end
-		console.log(combined .. "\t For: " .. movePower .. " " .. types_lookup[moveType] .. " " .. moveAcc .. " " .. eff)
+		log(L_VERBOSE, combined .. "\t For: " .. movePower .. " " .. types_lookup[moveType] .. " " .. moveAcc .. " " .. eff)
 		pressAndAdvance(DOWN)
 	end
 	if index < 0 then
-		console.log("No moves that can damage enemy :(")
+		log(L_ERROR, "No moves that can damage enemy :(")
 	end
 	return index
 end
@@ -157,7 +157,7 @@ end
 
 function waitForNextTurn()
 
-  console.log("Waiting for next turn")
+  log(L_VERBOSE, "Waiting for next turn")
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
     pressAndAdvance(DOWN,2)
@@ -166,7 +166,7 @@ function waitForNextTurn()
 		pressAndAdvance(B,2)
     pressAndAdvance(UP,2)
 	end
-  console.log("Next turn starting" .. enemyHP() .. "," .. myHP() .. "," .. battleType())
+  log(L_DEBUG,"Next turn starting" .. enemyHP() .. "," .. myHP() .. "," .. battleType())
   -- client.pause()
 end
 
@@ -186,30 +186,30 @@ function enemyTypes()
 	return memory.readbyte(ENEMY_TYPE_1_MEM), memory.readbyte(ENEMY_TYPE_2_MEM)
 end
 
-function logAll(numEnemyPoke)
-	console.log("##########")
-	console.log("Turn: " .. memory.readbyte(IN_BATTLE_TURNS_MEM))
+function logAll(level, numEnemyPoke)
+	log(level, "##########")
+	log(level, "Turn: " .. memory.readbyte(IN_BATTLE_TURNS_MEM))
 	logMe()
 	logEnemy()
-  console.log("Enemy still has " .. numEnemyPoke .. " poke alive")
-	console.log("##########")
+	log(level, "Enemy still has " .. numEnemyPoke .. " poke alive")
+	log(level, "##########")
 end
 
-function logEnemy()
-	console.log("-------")
-	console.log("Facing " .. pokemon_lookup[memory.readbyte(ENEMY_POKE_MEM)])
+function logEnemy(level)
+	log(level, "-------")
+	log(level, "Facing " .. pokemon_lookup[memory.readbyte(ENEMY_POKE_MEM)])
 	enemy_type1, enemy_type2 = enemyTypes()
-	console.log("Types: " .. types_lookup[enemy_type1] .. " " .. types_lookup[enemy_type2])
-	console.log("HP: " .. enemyHP())
-	console.log("-------")
+	log(level, "Types: " .. types_lookup[enemy_type1] .. " " .. types_lookup[enemy_type2])
+	log(level, "HP: " .. enemyHP())
+	log(level, "-------")
 end
 
 function logMe()
-	console.log("-------")
-  console.log(memory.readbyte(MY_POKE_MEM))
-	console.log("My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
-	console.log("HP: " .. myHP())
-	console.log("-------")
+	log(level, "-------")
+	log(level, memory.readbyte(MY_POKE_MEM))
+	log(level, "My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
+	log(level, "HP: " .. myHP())
+	log(level, "-------")
 end
 
 function runFromBattle()
@@ -217,7 +217,7 @@ function runFromBattle()
 	goToMenuItem(1)
 	pressAndAdvance(A,20)
 	waitForNextTurn()
-	console.log("Run attempt resolved")
+	log(L_VERBOSE, "Run attempt resolved")
 end
 
 function battleType() 
