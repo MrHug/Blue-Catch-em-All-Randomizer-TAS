@@ -21,14 +21,17 @@ function start_game()
 	route1_viridian_to_pallet_encounterless()
 	turnAndTakeSteps(DOWN)
 	pallet_entrance_to_lab()
+	savestate.saveslot(1)
 	oaks_lab_behind_oak()
 	handoverParcel()
 	behind_oak_exit_lab()
+	turnAndTakeSteps(DOWN)
+	transition()
 	walkTo(pallet_route_1)
 	turnAndTakeSteps(UP)
 	route1_pallet_to_viridian()
+	turnAndTakeSteps(UP)
 	viridian_entrace_to_mart()
-	savestate.saveslot(0)
 	goToMartCounter()
 	talkToMart()
 	buyItem(POKEBALL_ID,12)
@@ -39,7 +42,11 @@ function start_game()
 	viridian_center_to_forest(true)
 	viridian_forest_up(true)
 	walkTo(route_2_pewter)
+	turnAndTakeSteps(UP)
 	pewter_first_time()
+	pewter_enter_mt_moon()
+	savestate.saveslot(6)
+	mt_moon(true)
 end
 
 
@@ -149,8 +156,5 @@ end
 
 function handoverParcel()
 	pressAndAdvance(A,10)
-	mashText(15)
-	advanceFrame(100) -- Rival walking
-	mashText(75)
-	advanceFrame(100) -- Rival walking
+	mashTillTurned(LEFT)
 end

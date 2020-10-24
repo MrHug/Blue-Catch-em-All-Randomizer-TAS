@@ -63,7 +63,7 @@ function turn(dir)
 		cnt = cnt + 1
 		advanceFrame(1)
 		checkInBattle()
-		if waittime > 20 then
+		if waittime > 200 then
 			return false
 		end
 	end
@@ -120,19 +120,29 @@ function checkInBattle()
 	return false
 end
 
-function goToMenuItem(id, additional_button)
+function goToMenuItem(id, additional_button, timeout)
+	local t = 0
 	while memory.readbyte(SELECTED_MENU_ITEM_MEM) < id do
 		pressAndAdvance(DOWN, 4)
+		t = t + 4
+		if timeout and t > timeout then
+			return false
+		end
     if additional_button then
       pressAndAdvance(additional_button, 1)
     end
 	end
 	while memory.readbyte(SELECTED_MENU_ITEM_MEM) > id do
 		pressAndAdvance(UP, 4)
-    if additional_button then
-      pressAndAdvance(additional_button, 1)
-    end
+		t = t + 4
+		if timeout and t > timeout then
+			return false
+		end
+		if additional_button then
+		  pressAndAdvance(additional_button, 1)
+		end
 	end
+	return true
 end
 
 function findItemInInventory(item_id)
@@ -153,7 +163,7 @@ end
 
 function own(pokemon_id)
 	local pokedex_id = pokemon_hex_to_pokedex[pokemon_id]
-	console.log("Checking if we own: " .. pokemon_lookup[pokemon_id] .. " number " .. pokedex_id)
+	log(L_VERBOSE, "Checking if we own: " .. pokemon_lookup[pokemon_id] .. " number " .. pokedex_id)
 	local cnt = 0
 	while pokedex_id > 8 do
 		pokedex_id = pokedex_id - 8
@@ -277,6 +287,7 @@ function walkTo(dst, dir)
       end
     else 
       log(L_ERROR,"Error: no path found!")
+	  log(L_ERROR,"Map type: " .. memory.readbyte(0xD367))
 	  logSrcDst(L_ERROR, src, dst)
       return false
     end
@@ -431,7 +442,7 @@ function walkPath(path)
 	local dir = getDir(src, v)
     if dir then
       if not turnAndTakeSteps(dir) then
-		console.log("Something interrupted! Checking if it is trainer")
+		log(L_DEBUG, "Something interrupted! Checking if it is trainer")
 		local cnt = 0
 		while cnt < 20 do
 			pressAndAdvance(B)
@@ -442,7 +453,7 @@ function walkPath(path)
 		end
 		if not turn(dir) then 
 			log(L_ERROR,"Mashing didn't help!")
-			logSrcDSt(L_ERROR, src,v)
+			logSrcDSt(L_ERROR, src, dst)
 			return false
 		end
 	  end
@@ -457,10 +468,10 @@ function walkPath(path)
       cnt = cnt + 1
 	  log(L_VERBOSE, "Seem to be stuck: ", cnt)
       if (cnt > 20) then
-        log(L_ERROR, "-----")
-        log(L_ERROR, "Path interrupted when:")
-        logSrcDst(L_ERROR, src, v)
-        log(L_ERROR, "-----")
+        log(L_WARN, "-----")
+        log(L_WARN, "Path interrupted when:")
+        logSrcDst(L_WARN, src, v)
+        log(L_WARN, "-----")
         return false
       end
     end
@@ -531,11 +542,15 @@ function getBadges()
 end
 
 function runFromSaveSlotToSaveSlot(slot1, func, slot2)
-	log(L_DEBUG,"Loading from slot " .. slot_2)
-	client.loadstate(slot1)
+	if slot1 then
+		log(L_DEBUG,"Loading from slot " .. slot_1)
+		savestate.loadslot(slot1)
+	end
 	client.unpause()
 	func()
-	log(L_DEBUG,"Saving to slot " .. slot_2)
-	client.savestate(slot2)
+	if slot2 then
+		log(L_DEBUG,"Saving to slot " .. slot_2)
+		savestate.saveslot(slot2)
+	end
 	client.pause()
 end

@@ -4,8 +4,15 @@ function battleTrainer()
 	local result = true
   goToMenuItem(0)
   local numEnemyPoke = memory.readbyte(ENEMY_NUM_POKE_MEM)
-	while numEnemyPoke > 0 and myHP() > 0 do
-    goToMenuItem(0, B)
+  while numEnemyPoke > 0 and myHP() > 0 and battleType() > 0 do
+	while battleType() > 0 do
+		if goToMenuItem(0, B, 100) then
+			break;
+		end
+	end
+	if battleType() == 0 then
+		break;
+	end
     logAll(L_VERBOSE, numEnemyPoke)
 		pressAndAdvance(A)
 		local x=findAndPerformMostPowerfullMove()
@@ -44,7 +51,7 @@ function battleWild()
 		end
 	else 
 		while enemyHP() > 0 and myHP() > 0 do
-			logAll(L_VERBOSE_,1)
+			logAll(L_VERBOSE,1)
 			if enemyHP() > enemyMaxHP() / 2 then 
 				goToMenuItem(0)
 				pressAndAdvance(A)
@@ -158,7 +165,7 @@ end
 function waitForNextTurn()
   log(L_VERBOSE, "Waiting for next turn")
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 and myHP() > 0 and battleType() > 0 do
-		pressAndAdvance(B,2)
+	pressAndAdvance(B,2)
     pressAndAdvance(DOWN,2)
 	end
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do

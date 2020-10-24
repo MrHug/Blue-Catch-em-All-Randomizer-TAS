@@ -27,7 +27,7 @@ function buyItem(item, amount)
 	n = memory.readbyte(MART_TOTAL_MEM)
 	index = -1
 	for i=0,(n-1) do
-		console.log(items_lookup[memory.readbyte(MART_ITEM_OFFSET_MEM + i)])
+		log(L_VERBOSE, "Mart item: " ..items_lookup[memory.readbyte(MART_ITEM_OFFSET_MEM + i)])
 		if memory.readbyte(MART_ITEM_OFFSET_MEM + i) == item then
 			index = i
 			break

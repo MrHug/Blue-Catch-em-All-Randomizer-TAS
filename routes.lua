@@ -24,7 +24,7 @@ route_1_viridian = { [0] = 0, [1] = 11}
 
 -- Viridian
 
-viridian_cut_bush = { [0] = 4, [1] = 14}
+viridian_cut_bush = { [0] = 4, [1] = 15}
 viridian_center = { [0] = 26, [1] = 23}
 viridian_mart = { [0] = 20, [1] = 29}
 viridian_route_2 = { [0] = 0, [1] = 18}
@@ -44,8 +44,8 @@ viridian_forest_south_gate_viridian = {[0] = 7, [1] = 5}
 viridian_forest_south_gate_forest = {[0] = 1, [1] = 5}
 viridian_forest_south_entrance = { [0] = 47, [1] = 17}
 viridian_forest_tree_item = { [0] = 42, [1] = 15}
-viridian_forest_right_item = { [0] = 11, [1] = 25}
-viridian_forest_middle_item = { [0] = 12, [1] = 29}
+viridian_forest_right_item = { [0] = 12, [1] = 25}
+viridian_forest_middle_item = { [0] = 12, [1] = 28}
 viridian_forest_in_front_of_trainer = { [0] = 18, [1] = 1}
 viridian_forest_west_item = { [0] = 31, [1] = 2}
 viridian_forest_north_entrance = { [0] = 0, [1] = 1}
@@ -219,7 +219,7 @@ function viridian_center_to_forest(pick_up)
 		turn(LEFT)
 		pickupItem(RIGHT)
 	end
-	walkTo(viridian_center_to_forest)
+	walkTo(viridian_route_2)
 	turnAndTakeSteps(UP)
 	walkTo(route_2_forest_viridian_side)
 	turnAndTakeSteps(UP)
@@ -269,6 +269,22 @@ function pewter_first_time()
   walkTo(pewter_center)
   healAndExit()
   walkTo(pewter_route_3)
+end
+
+function pewter_enter_mt_moon()
+	walkTo(pewter_route_3)
+	turnAndTakeSteps(RIGHT)
+	walkTo(route_3_route_4)
+	turnAndTakeSteps(UP)
+	walkTo(route_4_center)
+	healAndExit()
+	walkTo(route_4_moon_pewter_side)
+	turnAndTakeSteps(UP)
+	transition()
+end
+
+function mt_moon(pick_up)
+	walkTo(moon_route_4_f1_top_left_stairs)
 end
 
 function doNuggetBridge()
