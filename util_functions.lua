@@ -107,7 +107,7 @@ end
 
 function checkInBattle()
 	if memory.readbyte(IN_BATTLE_MEM) > 0 and memory.readbyte(IN_BATTLE_MEM) < 100 then
-		console.log("Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
+		log(L_DEBUG, "Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
 		hadBattle = true
 		savestate.saveslot(8)
 		if battleType() == BATTLE_WILD then
@@ -277,6 +277,7 @@ function walkTo(dst, dir)
       end
     else 
       log(L_ERROR,"Error: no path found!")
+	  logSrcDst(L_ERROR, src, dst)
       return false
     end
     myY, myX, src = getMyPos()

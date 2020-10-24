@@ -5,6 +5,7 @@ my_house_exit = {[0] = 7, [1] = 3}
 
 -- Pallet Town
 pallet_exit_grass = {[0] = 1, [1] = 10}
+pallet_lab = {[0] = 12, [1] = 12}
 pallet_route_1 = {[0]=0, [1] = 10}
 
 
@@ -13,6 +14,7 @@ oak_lab_ball_1 = {[0] = 4, [1] =6}
 oak_lab_ball_2 = {[0] = 4, [1] =7}
 oak_lab_ball_3 = {[0] = 4, [1] =8}
 oak_lab_rival_fight = {[0]=6, [1] = 5}
+oak_lab_behind_oak = {[0]=1, [1] = 5}
 oak_lab_exit = {[0]= 11, [1] = 5}
 
 
@@ -26,7 +28,7 @@ viridian_cut_bush = { [0] = 4, [1] = 14}
 viridian_center = { [0] = 26, [1] = 23}
 viridian_mart = { [0] = 20, [1] = 29}
 viridian_route_2 = { [0] = 0, [1] = 18}
-viridian_route_1 = { [0] = 32, [1] = 21}
+viridian_route_1 = { [0] = 35, [1] = 21}
 
 
 -- Route 2
@@ -168,7 +170,7 @@ end
 function viridian_entrace_to_mart()
 	walkTo(viridian_center)
 	healAndExit()
-	walkTo(viridian_entrace_to_mart)
+	walkTo(viridian_mart)
 	turnAndTakeSteps(UP)
 	transition()
 end
@@ -191,8 +193,8 @@ function viridian_mart_to_entrance()
 end
 
 function pallet_entrance_to_lab()
-	walkTo(pallet_entrance_to_lab)
-	turnAndTakeSteps(UP,1)
+	walkTo(pallet_lab)
+	turnAndTakeSteps(UP)
 	transition()
 end
 
@@ -201,7 +203,7 @@ function lab_to_pallet_entrance()
 end
 
 function oaks_lab_behind_oak()
-	walkTo(oaks_lab_behind_oak)
+	walkTo(oak_lab_behind_oak)
 	turn(DOWN)
 end
 

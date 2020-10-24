@@ -37,7 +37,7 @@ function battleWild()
 	local pokeball_id = hasPokeballs()
   goToMenuItem(0)
 	if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
-		console.log("Will try to run")
+		log(L_VERBOSE, "Will try to run")
 		
 		while battleType() ~= 0 do
 			runFromBattle()
@@ -58,14 +58,14 @@ function battleWild()
 					while battleType() ~= 0 do
 						pressAndAdvance(B,3)
 					end
-					console.log("Done with battle: " .. battleType())
+					log(L_VERBOSE, "Done with battle: " .. battleType())
 					return
 				else
 					waitForNextTurn()
 				end
 			end
 		end
-		console.log("Accidentally killed it")
+		log(L_VERBOSE, "Accidentally killed it")
 		while battleType() > 0 do
 			pressAndAdvance(B)
 		end
@@ -156,7 +156,6 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
 end
 
 function waitForNextTurn()
-
   log(L_VERBOSE, "Waiting for next turn")
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 and myHP() > 0 and battleType() > 0 do
 		pressAndAdvance(B,2)
@@ -189,8 +188,8 @@ end
 function logAll(level, numEnemyPoke)
 	log(level, "##########")
 	log(level, "Turn: " .. memory.readbyte(IN_BATTLE_TURNS_MEM))
-	logMe()
-	logEnemy()
+	logMe(level)
+	logEnemy(level)
 	log(level, "Enemy still has " .. numEnemyPoke .. " poke alive")
 	log(level, "##########")
 end
@@ -204,7 +203,7 @@ function logEnemy(level)
 	log(level, "-------")
 end
 
-function logMe()
+function logMe(level)
 	log(level, "-------")
 	log(level, memory.readbyte(MY_POKE_MEM))
 	log(level, "My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
