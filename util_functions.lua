@@ -106,7 +106,13 @@ function takeHop(dir)
 end
 
 function checkInBattle()
-	if memory.readbyte(IN_BATTLE_MEM) > 0 and memory.readbyte(IN_BATTLE_MEM) < 100 then
+  
+  -- NPC is approaching, but battle bit is not yet set.
+  while bit.band(memory.readbyte(VARIOUS_FLAGS_7), 8) > 0 and not (bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0) do
+      pressAndAdvance(B)
+  end
+      
+	if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0 then
 		log(L_DEBUG, "Battle detected of type: " .. memory.readbyte(IN_BATTLE_MEM))
 		hadBattle = true
 		savestate.saveslot(8)
