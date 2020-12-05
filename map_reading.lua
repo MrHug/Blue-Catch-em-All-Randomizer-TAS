@@ -11,6 +11,7 @@ local tileToWalkable = {
     [27] = {[0] = 0, [1] = 1, [2] = 0, [3] = 1},
 		[28] = {[0] = 1, [1] = 1, [2] = 0, [3] = 0},
 		[39] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
+		[44] = {[0] = 0, [1] = 0, [2] = 0, [3] = 0},
     [47] = {[0] = 1, [1] = 1, [2] = -1, [3] = 1},
     [49] = {[0] = 1, [1] = 1, [2] = 1, [3] = 1},
     [52] = {[0] = -5, [1] = 1, [2] = 0, [3] = 0}, -- FIXME CUT BUSH, set to -5???????
@@ -169,7 +170,7 @@ function readMap()
 	map_height = memory.readbyte(0xD368)
 	map_width = memory.readbyte(0xD369)
 	map_tileset = memory.readbyte(0xD367)
-	--console.log("Map " .. map_num .. ", of size " .. map_width .. " by " .. map_height .. ", with tile set " .. map_tileset)
+	log(L_DEBUG, "Map " .. map_num .. ", of size " .. map_width .. " by " .. map_height .. ", with tile set " .. map_tileset)
 	
 	mem_index = memory.readbyte(0xD36A) + memory.readbyte(0xD36B) *256
 	--console.log(mem_index)
