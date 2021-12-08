@@ -46,16 +46,19 @@ function battleWild()
   if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
     log(L_VERBOSE, "Will try to run")
 
-    while battleType() ~= 0 do
-      runFromBattle()
-    end
+	while battleType() == BATTLE_WILD do
+		runFromBattle()
+		if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
+		  break;
+		end
+	end
   else 
     while enemyHP() > 0 and myHP() > 0 do
       logAll(L_VERBOSE,1)
       if enemyHP() > enemyMaxHP() / 2 then 
         goToMenuItem(0)
         pressAndAdvance(A)
-        local x=findAndPerformMostPowerfullMove()
+        local x=findAndPerformCatchingMove()
       else 
         if throwPokeball() then
           while battleType() ~= 0 do
@@ -101,7 +104,18 @@ function throwPokeball()
 end
 
 function battleOpening()
-  waitForNextTurn()
+  waitForFirstTurn()
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
+    pressAndAdvance(B,2)
+    pressAndAdvance(UP,2)
+  end
+end
+
+function waitForFirstTurn()
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 or enemyHP() ==0 do
+    pressAndAdvance(B,2)
+    pressAndAdvance(DOWN,2)
+  end
   while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
     pressAndAdvance(B,2)
     pressAndAdvance(UP,2)
@@ -134,6 +148,47 @@ function mostPowerfullMoveID()
   return index
 end
 
+function bestCatchingMoveID() 
+  enemy_type1, enemy_type2 = enemyTypes()
+
+  goToMenuItem(1)
+  index = -1
+  mostPower = 0
+  for i=1,4 do
+    movePower = memory.readbyte(MY_SELECTED_MOVE_POWER)
+    moveType = memory.readbyte(MY_SELECTED_MOVE_TYPE)
+    moveAcc = memory.readbyte(MY_SELECTED_MOVE_ACC)
+    movePP = memory.readbyte(MY_MOVES_PP_MEM + (i-1))
+    eff = effectiveness(moveType, enemy_type1, enemy_type2)
+    combined = movePower * moveAcc/255 * eff
+    if 50 < combined and combined < 100 and movePP > 0 then
+      index = i
+    end
+    log(L_VERBOSE, combined .. "\t For: " .. movePower .. " " .. types_lookup[moveType] .. " " .. moveAcc .. " " .. eff)
+    pressAndAdvance(DOWN)
+  end
+  if index < 0 then
+    log(L_ERROR, "No moves that can damage enemy for catching :(")
+	index = findMostPowerfullMoveID()
+  end
+  return index
+end
+
+function findAndPerformCatchingMove()
+  local y = bestCatchingMoveID()
+  local x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
+  while y ~= x do
+    pressAndAdvance(DOWN)
+    x = x + 1
+    if x > 4 then
+      x = 1
+    end
+  end
+  pressAndAdvance(A)
+  waitForNextTurn()
+  return y
+end
+
 function findAndPerformMostPowerfullMove()
 
   local y = mostPowerfullMoveID()
@@ -164,16 +219,19 @@ end
 
 function waitForNextTurn()
   log(L_VERBOSE, "Waiting for next turn")
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 and myHP() > 0 and battleType() > 0 do
+  local curTurnTimer = memory.readbyte(IN_BATTLE_TURNS_MEM)
+  while memory.readbyte(IN_BATTLE_TURNS_MEM) == curTurnTimer do
     pressAndAdvance(B,2)
-    pressAndAdvance(DOWN,2)
+	if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
+		return
+	end
   end
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 and enemyHP() > 0 and myHP() > 0 and battleType() > 0 do
+  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
     pressAndAdvance(B,2)
     pressAndAdvance(UP,2)
   end
-  log(L_DEBUG,"Next turn starting" .. enemyHP() .. "," .. myHP() .. "," .. battleType())
-  -- client.pause()
+  log(L_DEBUG,"Next turn starting: " .. enemyHP() .. "," .. myHP() .. "," .. battleType())
+  --client.pause()
 end
 
 function enemyMaxHP() 
@@ -213,7 +271,11 @@ end
 function logMe(level)
   log(level, "-------")
   log(level, memory.readbyte(MY_POKE_MEM))
-  log(level, "My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
+  if pokemon_lookup[memory.readbyte(MY_POKE_MEM)] ~= nil then
+	log(level, "My Poke " .. pokemon_lookup[memory.readbyte(MY_POKE_MEM)])
+  else
+	log(level, "Cannot log poke for some reason?")
+  end
   log(level, "HP: " .. myHP())
   log(level, "-------")
 end
@@ -223,7 +285,7 @@ function runFromBattle()
   goToMenuItem(1)
   pressAndAdvance(A,20)
   waitForNextTurn()
-  log(L_VERBOSE, "Run attempt resolved")
+  log(L_VERBOSE, "Run attempt resolved " .. battleType())
 end
 
 function battleType() 

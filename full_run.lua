@@ -16,7 +16,7 @@ require "start_game"
 function main()
 	memory.usememorydomain("System Bus")
 	console.clear()
-	set_loglevel(L_INFO)
+	set_loglevel(L_VERBOSE)
 	client.speedmode(5000)
 	client.unpause()
 	new_game()

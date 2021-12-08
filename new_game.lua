@@ -22,8 +22,8 @@ function get_to_menu()
 end
 
 function options()
-	pressButton(DOWN)
-	advanceFrame(4)
+	log(L_DEBUG, "Going into options")
+	goToMenuItem(2,false,20)
 	pressButton(A)
 	advanceFrame(23)
 	pressButton(DOWN)

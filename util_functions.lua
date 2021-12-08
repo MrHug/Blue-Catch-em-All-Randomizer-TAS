@@ -122,7 +122,9 @@ function checkInBattle()
     return true
   end
   if battleType() == BATTLE_WILD then
+	log(L_DEBUG, "Wild battle started")
     battleWild()
+	log(L_DEBUG, "Wild battle done, giving back control")
   end
   return false
 end

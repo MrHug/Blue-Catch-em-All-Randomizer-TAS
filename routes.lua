@@ -99,6 +99,7 @@ route_6_underground_house_down = {[0] = 4, [1] = 3}
 
 moon_route_4_entrance = { [0] = 35, [1] = 15 }
 moon_route_4_f1_top_left_stairs = { [0] = 4, [1] = 5 }
+moon_route_4_f1_top_left_item = { [0] = 2, [1] = 3 }
 moon_route_4_f2_top_left_in = { [0] = 5, [1] = 6 }
 moon_route_4_f2_top_left_out = { [0] = 17, [1] = 20 }
 moon_route_4_f3_mid_right = { [0] = 16, [1] = 21 }
@@ -288,7 +289,23 @@ function pewter_enter_mt_moon()
 end
 
 function mt_moon(pick_up)
+	if pick_up then
+		walkTo(moon_route_4_f1_top_left_item)
+		mashTillTurned(LEFT)
+		pickupItem(RIGHT)
+	end
 	walkTo(moon_route_4_f1_top_left_stairs)
+	turnAndTakeSteps(DOWN)
+	transition()
+	walkTo(moon_route_4_f2_top_left_out)
+	turnAndTakeSteps(RIGHT)
+	transition()
+	savestate.saveslot(3)
+	walkTo(moon_route_4_f3_fossil)
+	pickupFossil()
+	walkTo(moon_route_4_f3_top_left_out)
+	turnAndTakeSteps(DOWN)
+	transition()
 end
 
 function doNuggetBridge()
