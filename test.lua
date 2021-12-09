@@ -20,12 +20,12 @@ function main()
 	console.clear()
 	-- savestate.loadslot(1)
 	-- savestate.loadslot(2)
-	savestate.loadslot(4)
+	savestate.loadslot(6)
 	set_loglevel(L_VERBOSE)
 	client.unpause()
-	client.speedmode(200)
+	client.speedmode(3500)
 	while true do
-		walkTo(moon_route_4_f3_fossil)
+		mt_moon(true)
 		--savestate.saveslot(3)
 		break
 	end

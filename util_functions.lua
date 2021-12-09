@@ -29,8 +29,10 @@ function pressAndAdvance(button, frames)
   frames = frames or 5
   pressButton(button)
   advanceFrame(1)
-  pressButton(button)
-  advanceFrame(frames-1)
+  if frames > 1 then
+	pressButton(button)
+	advanceFrame(frames-1)
+  end
 end
 
 function mashText(num)
@@ -45,6 +47,7 @@ function transition()
 end
 
 function advanceFrame(num)
+  num = num or 1
   for i=1,num do
     emu.frameadvance()
   end
@@ -106,27 +109,9 @@ function takeHop(dir)
 end
 
 function checkInBattle()
-
-  -- NPC is approaching, but battle bit is not yet set.
-  if bit.band(memory.readbyte(VARIOUS_FLAGS_7), 8) > 0 then
-    log(L_INFO, "NPC approaching for battle")
-    while not (bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0) do
-      pressAndAdvance(B)
-    end
+  if not handleBattle() then
+	log(L_DEBUG, "Handle battle says we lost!")
   end
-
-  if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0 then
-    log(L_DEBUG, "Trainer battle detected")
-    savestate.saveslot(8)
-    battleTrainer()
-    return true
-  end
-  if battleType() == BATTLE_WILD then
-	log(L_DEBUG, "Wild battle started")
-    battleWild()
-	log(L_DEBUG, "Wild battle done, giving back control")
-  end
-  return false
 end
 
 function goToMenuItem(id, additional_button, timeout)
@@ -506,7 +491,7 @@ end
 function battleGymLeader()
   pressAndAdvance(A)
   mashTillBattle(B)
-  battleTrainer()
+  checkInBattle()
   mashTillTurned(DOWN)
 end
 

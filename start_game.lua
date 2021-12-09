@@ -45,8 +45,11 @@ function start_game()
 	turnAndTakeSteps(UP)
 	pewter_first_time()
 	pewter_enter_mt_moon()
-	savestate.saveslot(6)
 	mt_moon(true)
+	savestate.saveslot(6)
+	walkTo(cerulean_center)
+	healAndExit()
+	savestate.saveslot(7)
 end
 
 

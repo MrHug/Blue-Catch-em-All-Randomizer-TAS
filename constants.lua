@@ -46,9 +46,13 @@ dir_map = {
 X_COORD_MENU_MEM = 0xCC24
 
 IN_BATTLE_MEM = 0xD057
+
 IN_BATTLE_TURNS_MEM = 0xCCD5
 VARIOUS_FLAGS_3 = 0xD72D -- bit 6 is reset after battle
-VARIOUS_FLAGS_7 = 0xD733
+VARIOUS_FLAGS_7 = 0xD733 -- Bit 3 indicates trainer is walking towards us
+
+AUDIO_BANK_MEM = 0xC0EF
+AUDIO_TRACK_MEM = 0xC026 -- Is 0F when bank is 08 for wild battle
 
 MY_POKE_MOVE_1_MEM = 0xD01C
 MY_SELECTED_MOVE_POWER = 0xCFD4

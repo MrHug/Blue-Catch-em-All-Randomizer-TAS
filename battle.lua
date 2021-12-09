@@ -1,86 +1,181 @@
-function battleTrainer()
-  log(L_INFO, "Fighting trainer")
-  battleOpening()
-  local result = true
-  goToMenuItem(0)
-  local numEnemyPoke = memory.readbyte(ENEMY_NUM_POKE_MEM)
-  while numEnemyPoke > 0 and myHP() > 0 and battleType() > 0 do
-    while bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0 do
-      if goToMenuItem(0, B, 100) then
-        break;
-      end
-    end
-    if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
-      break;
-    end
-    logAll(L_VERBOSE, numEnemyPoke)
-    pressAndAdvance(A)
-    local x=findAndPerformMostPowerfullMove()
-    if enemyHP() == 0 then
-      log(L_DEBUG, "Killed enemy")
-      numEnemyPoke = numEnemyPoke - 1
-      log(L_DEBUG, numEnemyPoke .. " pokes remaining")
-    elseif myHP() == 0 then
-      console.log("Got killed")
-      if memory.readbyte(MY_NUM_OF_POKES) == 1 then
-        log(L_ERROR, "Lost all pokes")
-        result = false
-      end
-    end
-  end
-  log(L_INFO, "Battle is done!")
 
-  while battleType() > 0 do
-    pressAndAdvance(B)
-  end
-  advanceFrame(30)
-  log(L_DEBUG, "Exiting battleTrainer")
-  return result
-end
+BATTLE_TYPE_NONE = 0
+BATTLE_TYPE_WILD = 1
+BATTLE_TYPE_TRAINER = 2
 
-function battleWild()
-  log(L_INFO, "Fighting wild")
-  battleOpening()
-  local pokeball_id = hasPokeballs()
-  goToMenuItem(0)
-  if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
-    log(L_VERBOSE, "Will try to run")
+STATE_BATTLE_OPENING = 0
+STATE_BATTLE_DONE = 1
+STATE_BATTLE_MY_TURN = 2
+STATE_BATTLE_WFT = 3
 
-	while battleType() == BATTLE_WILD do
-		runFromBattle()
-		if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
-		  break;
+STATE_BATTLE_OPENING_SUBSTATE_WFM0 = 0
+STATE_BATTLE_OPENING_SUBSTATE_WFM1 = 1
+STATE_BATTLE_OPENING_SUBSTATE_WFM0_2 = 2
+
+-- Returns true if we handled it successfully or if there was no battle, false if we fainted!
+function handleBattle()
+	-- Check what type of battle we are in, if any
+	handleTrainerWalkingUpToUs()
+	
+	local bType = getBattleType()
+	if bType == BATTLE_TYPE_NONE or (bType ~= BATTLE_TYPE_WILD and bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0) then
+		return true
+	end
+	
+	local data = {}
+	data["state"] = STATE_BATTLE_OPENING
+	log(L_VERBOSE, "************\nBATTLE: starting battle")
+	
+	while (true) do
+		local state = data["state"]
+		if state == STATE_BATTLE_OPENING then
+			data = handleOpening(data)
+		elseif state == STATE_BATTLE_MY_TURN then
+			data = handleMyTurn(data)
+		elseif state == STATE_BATTLE_WFT then
+			data = handleWaitingForTurn(data)
+		elseif state == STATE_BATTLE_DONE then
+			pressAndAdvance(B,50) -- All trainers have some text right? :) TODO see if can be replaced by using better battle detection somehow. Currently fossil guy breaks this his battle bit is reset too early then set again and then reset.
+			while bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0 or getBattleType() == BATTLE_TYPE_WILD do
+				pressAndAdvance(B)
+			end
+			log(L_VERBOSE, "Leaving battle state\n****************\n")
+			return true
+		else
+			advanceFrame(1)
 		end
 	end
-  else 
-    while enemyHP() > 0 and myHP() > 0 do
-      logAll(L_VERBOSE,1)
-      if enemyHP() > enemyMaxHP() / 2 then 
-        goToMenuItem(0)
-        pressAndAdvance(A)
-        local x=findAndPerformCatchingMove()
-      else 
-        if throwPokeball() then
-          while battleType() ~= 0 do
-            pressAndAdvance(B,3)
-          end
-          pressAndAdvance(B,10)
-          while battleType() ~= 0 do
-            pressAndAdvance(B,3)
-          end
-          log(L_VERBOSE, "Done with battle: " .. battleType())
-          return
-        else
-          waitForNextTurn()
-        end
-      end
+end
+
+function handleTrainerWalkingUpToUs()
+	-- NPC is approaching, but battle bit is not yet set.
+	if bit.band(memory.readbyte(VARIOUS_FLAGS_7), 8) > 0 and bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
+		log(L_INFO, "NPC approaching for battle")
+		while not (bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0) do
+		  pressAndAdvance(B)
+		end
+	end
+end
+
+function handleOpening(data)	
+	if data["substate"] == nil then
+		data["substate"] = STATE_BATTLE_OPENING_SUBSTATE_WFM0
+	end
+	
+	if data["substate"] == STATE_BATTLE_OPENING_SUBSTATE_WFM0 then
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 then
+			pressButton(B)
+			pressAndAdvance(UP,1)
+		end
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 then
+			data["substate"] = STATE_BATTLE_OPENING_SUBSTATE_WFM1
+		end
+	elseif data["substate"] == STATE_BATTLE_OPENING_SUBSTATE_WFM1 then
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 then
+			pressButton(B)
+			pressAndAdvance(DOWN,1)
+			advanceFrame(1)
+		end
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) == 1 then
+			data["substate"] = STATE_BATTLE_OPENING_SUBSTATE_WFM0_2
+		end
+	elseif data["substate"] == STATE_BATTLE_OPENING_SUBSTATE_WFM0_2 then
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 then
+			pressButton(B)
+			pressAndAdvance(UP,1)
+		end
+		if memory.readbyte(SELECTED_MENU_ITEM_MEM) == 0 then
+			log(L_VERBOSE, "BATTLE: Swapping state to my turn")
+			data["substate"] = nil
+			data["state"] = STATE_BATTLE_MY_TURN
+		end
+	end
+	return data
+end
+
+function handleMyTurn(data)
+	goToMenuItem(0)
+	if data["battleType"] == nil then
+		data["battleType"] = getBattleType()
+		log(L_VERBOSE, "I have determined we are in a battle of type " .. getBattleType())
+	end
+	if data["battleType"] == BATTLE_TYPE_TRAINER then
+		return handleMyTrainerTurn(data)
+	end
+	return handleMyWildTurn(data)
+end
+
+function handleMyTrainerTurn(data)
+	if data["numEnemyPoke"] == nil then
+		data["numEnemyPoke"] = memory.readbyte(ENEMY_NUM_POKE_MEM)
+		log(L_DEBUG, "Established we're fighting against this many pokes " .. data["numEnemyPoke"])
+		--client.pause()
+	end
+	data['killedEnemy'] = nil
+	logAll(L_VERBOSE, data["numEnemyPoke"])
+	-- TODO add more logic than just attack in here
+	pressAndAdvance(A)
+	findAndPerformMostPowerfullMove()
+	log(L_VERBOSE, "BATTLE: Swapping state to WFT")
+	data["state"] = STATE_BATTLE_WFT
+	return data
+end
+
+function handleWaitingForTurn(data)
+	if enemyHP() == 0 and data['killedEnemy'] == nil then
+		data['killedEnemy'] = true
+		data['numEnemyPoke'] = data['numEnemyPoke'] - 1
+		log(L_DEBUG, "Registered a kill, number of pokemon remaining " .. data['numEnemyPoke'])
+	end
+	if data['numEnemyPoke'] == 0 and getBattleType() == BATTLE_TYPE_NONE then
+		log(L_VERBOSE, "BATTLE: Swapping state to done")
+		data["state"] = STATE_BATTLE_DONE
+		return data
+	end
+	return handleOpening(data)
+end
+
+function findAndPerformMostPowerfullMove()
+
+  local y = mostPowerfullMoveID()
+  local x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
+  while y ~= x do
+    pressAndAdvance(DOWN)
+    x = x + 1
+    if x > 4 then
+      x = 1
     end
-    log(L_VERBOSE, "Accidentally killed it")
-    while battleType() > 0 do
-      pressAndAdvance(B)
-    end
-    advanceFrame(30)
   end
+  pressAndAdvance(A)
+  return y
+end
+
+function handleMyWildTurn(data)
+	if data["numEnemyPoke"] == nil then
+		data["numEnemyPoke"] = 1
+	end
+	logAll(L_VERBOSE, data["numEnemyPoke"])
+	local pokeball_id = hasPokeballs()
+	-- TODO expand logic
+	if pokeball_id < 0 or own(memory.readbyte(ENEMY_POKE_MEM)) then
+		runFromBattle()
+		pressAndAdvance(B,50)
+		if getBattleType() == BATTLE_TYPE_NONE then
+			log(L_VERBOSE, "Run attempt worked")
+			data["state"] = STATE_BATTLE_DONE
+			return data
+		end
+	elseif enemyHP() > enemyMaxHP() / 2 then
+		pressAndAdvance(A)
+		findAndPerformCatchingMove()
+	elseif throwPokeball() then
+		log(L_VERBOSE, "BATTLE: Swapping state to Done after succesful catch, right log?")
+		data["state"] = STATE_BATTLE_DONE
+		return data
+	end
+	log(L_VERBOSE, "BATTLE: Swapping state to WFT")
+	data["state"] = STATE_BATTLE_WFT
+	return data
 end
 
 function throwPokeball()
@@ -97,29 +192,10 @@ function throwPokeball()
   if totalOwned() > before then
     log(L_VERBOSE, "Caught it!")
     log(L_DEBUG, "Now own: " .. totalOwned())
-    mashText(5)
+    mashText(10)
     return true
   end
   return false
-end
-
-function battleOpening()
-  waitForFirstTurn()
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
-    pressAndAdvance(B,2)
-    pressAndAdvance(UP,2)
-  end
-end
-
-function waitForFirstTurn()
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 1 or enemyHP() ==0 do
-    pressAndAdvance(B,2)
-    pressAndAdvance(DOWN,2)
-  end
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
-    pressAndAdvance(B,2)
-    pressAndAdvance(UP,2)
-  end
 end
 
 function mostPowerfullMoveID() 
@@ -128,6 +204,7 @@ function mostPowerfullMoveID()
   goToMenuItem(1)
   index = -1
   mostPower = 0
+  log(L_VERBOSE, "******* Move selection starting ********")
   for i=1,4 do
     movePower = memory.readbyte(MY_SELECTED_MOVE_POWER)
     moveType = memory.readbyte(MY_SELECTED_MOVE_TYPE)
@@ -142,6 +219,7 @@ function mostPowerfullMoveID()
     log(L_VERBOSE, combined .. "\t For: " .. movePower .. " " .. types_lookup[moveType] .. " " .. moveAcc .. " " .. eff)
     pressAndAdvance(DOWN)
   end
+  log(L_VERBOSE, "********* END OF MOVE SELECTION ***********\n")
   if index < 0 then
     log(L_ERROR, "No moves that can damage enemy :(")
   end
@@ -169,7 +247,7 @@ function bestCatchingMoveID()
   end
   if index < 0 then
     log(L_ERROR, "No moves that can damage enemy for catching :(")
-	index = findMostPowerfullMoveID()
+	index = mostPowerfullMoveID()
   end
   return index
 end
@@ -185,23 +263,6 @@ function findAndPerformCatchingMove()
     end
   end
   pressAndAdvance(A)
-  waitForNextTurn()
-  return y
-end
-
-function findAndPerformMostPowerfullMove()
-
-  local y = mostPowerfullMoveID()
-  local x = memory.readbyte(SELECTED_MENU_ITEM_MEM)
-  while y ~= x do
-    pressAndAdvance(DOWN)
-    x = x + 1
-    if x > 4 then
-      x = 1
-    end
-  end
-  pressAndAdvance(A)
-  waitForNextTurn()
   return y
 end
 
@@ -215,23 +276,6 @@ function effectiveness(move_type, enemy_type1, enemy_type2)
     factor2 = 1
   end
   return factor * factor2
-end
-
-function waitForNextTurn()
-  log(L_VERBOSE, "Waiting for next turn")
-  local curTurnTimer = memory.readbyte(IN_BATTLE_TURNS_MEM)
-  while memory.readbyte(IN_BATTLE_TURNS_MEM) == curTurnTimer do
-    pressAndAdvance(B,2)
-	if bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
-		return
-	end
-  end
-  while memory.readbyte(SELECTED_MENU_ITEM_MEM) ~= 0 or enemyHP() ==0 do
-    pressAndAdvance(B,2)
-    pressAndAdvance(UP,2)
-  end
-  log(L_DEBUG,"Next turn starting: " .. enemyHP() .. "," .. myHP() .. "," .. battleType())
-  --client.pause()
 end
 
 function enemyMaxHP() 
@@ -284,11 +328,10 @@ function runFromBattle()
   pressAndAdvance(RIGHT)
   goToMenuItem(1)
   pressAndAdvance(A,20)
-  waitForNextTurn()
-  log(L_VERBOSE, "Run attempt resolved " .. battleType())
+  log(L_VERBOSE, "Run attempt done")
 end
 
-function battleType() 
+function getBattleType() 
   return memory.readbyte(IN_BATTLE_MEM)
 end
 
