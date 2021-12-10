@@ -12,6 +12,21 @@ STATE_BATTLE_OPENING_SUBSTATE_WFM0 = 0
 STATE_BATTLE_OPENING_SUBSTATE_WFM1 = 1
 STATE_BATTLE_OPENING_SUBSTATE_WFM0_2 = 2
 
+STATUS_NONE = 0
+STATUS_PARALYSED = 1
+STATUS_POISONED = 2
+STATUS_BURNED = 3
+STATUS_SLEEP = 4
+STATUS_FROZEN = 5
+
+statusTranslator = {}
+statusTranslator[STATUS_NONE] = "None"
+statusTranslator[STATUS_PARALYSED] = "Paralysed"
+statusTranslator[STATUS_POISONED] = "Poisoned"
+statusTranslator[STATUS_BURNED] = "Burned"
+statusTranslator[STATUS_SLEEP] = "Sleep"
+statusTranslator[STATUS_FROZEN] = "Frozen"
+
 -- Returns true if we handled it successfully or if there was no battle, false if we fainted!
 function handleBattle()
 	-- Check what type of battle we are in, if any
@@ -309,6 +324,7 @@ function logEnemy(level)
   enemy_type1, enemy_type2 = enemyTypes()
   log(level, "Types: " .. types_lookup[enemy_type1] .. " " .. types_lookup[enemy_type2])
   log(level, "HP: " .. enemyHP())
+  log(level, "Status: " .. statusTranslator[getMyStatus()])
   log(level, "-------")
 end
 
@@ -333,6 +349,23 @@ end
 
 function getBattleType() 
   return memory.readbyte(IN_BATTLE_MEM)
+end
+
+function getMyStatus() 
+	statusB = memory.readbyte(MY_STATUS_MEM)
+	if bit.band(statusB, 64) == 1 then
+		return STATUS_PARALYSED
+	elseif bit.band(statusB, 32) == 1 then
+		return STATUS_FROZEN
+	elseif bit.band(statusB, 16) == 1 then
+		return STATUS_BURNED
+	elseif bit.band(statusB, 8) == 1 then
+		return STATUS_POISONED
+	elseif bit.band(statusB, 7) > 0 then
+		return STATUS_SLEEP
+	else
+		return STATUS_NONE
+	end
 end
 
 function hasPokeballs()

@@ -73,6 +73,7 @@ MART_ITEM_OFFSET_MEM = 0xCF7C
 MY_NUM_OF_POKES = 0xD163 
 MY_POKE_MEM = 0xD014
 MY_HP_MEM = 0xD015
+MY_STATUS_MEM = 0xD016 -- Bit 6: Paralyze, 5: frozen, 4: burned, 3: Poisoned, 2-0: Sleep counter
 
 TOTAL_ITEMS_MEM=0xD31D
 ITEM_1_MEM=0xD31E

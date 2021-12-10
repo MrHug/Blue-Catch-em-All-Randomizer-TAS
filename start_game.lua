@@ -49,6 +49,12 @@ function start_game()
 	savestate.saveslot(6)
 	walkTo(cerulean_center)
 	healAndExit()
+	doNuggetBridge()
+	walkTo(cerulean_center)
+	healAndExit()
+	beatMisty()
+	throughTrashedHouse()
+	ceruleanToViridian()
 	savestate.saveslot(7)
 end
 

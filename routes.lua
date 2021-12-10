@@ -348,6 +348,19 @@ function doBillCutScene()
   transition()
 end
 
+function beatMisty()
+	walkTo(cerulean_gym)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(cerulean_gym_misty)
+	mashTillTurned(LEFT)
+	battleGymLeader()
+	walkTo(cerulean_gym_exit)
+	turnAndTakeSteps(DOWN)
+	walkTo(cerulean_center)
+	healAndExit()
+end
+
 function throughTrashedHouse()
 	walkTo(cerulean_dig_house_entrance)
 	turnAndTakeSteps(RIGHT)

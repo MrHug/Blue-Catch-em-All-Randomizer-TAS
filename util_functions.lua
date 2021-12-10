@@ -256,6 +256,7 @@ function lookForEncounter()
 end
 
 function pickupItem(dir)
+  pressAndAdvance(A,2)
   pressAndAdvance(A,1)
   mashTillTurned(dir)
 end
