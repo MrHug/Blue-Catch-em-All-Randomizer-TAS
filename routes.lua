@@ -127,9 +127,20 @@ cerulean_trashed_house_entrance = { [0] = 7, [1] = 3}
 cerulean_trashed_house_exit = { [0] = 1, [1] = 3}
 
 -- Vermillion
+MAP_NUM_VERMILLION = 95
 
 vermillion_center = { [0] = 4, [1] = 11}
+vermillion_anne = { [0] = 30, [1] = 18}
+vermillion_cutbush = { [0] = 17, [1] = 15}
+vermillion_gym = { [0] = 20, [1] = 12}
 
+-- SS Anne
+ss_anne_1F_top_left = { [0] = 6, [1] = 3}
+ss_anne_1F_exit = { [0] = 0, [1] = 26}
+ss_anne_2F_top_left = { [0] = 5, [1] = 2}
+ss_anne_2F_captain = { [0] = 5, [1] = 36}
+ss_anne_captain_cap = { [0] = 3, [1] = 4}
+ss_anne_captain_door = { [0] = 7, [1] = 1}
 
 -- Route 24
 
@@ -395,4 +406,37 @@ function ceruleanToViridian()
 	-- On route 6
 	walkTo(route_6_vermillion)
 	turnAndTakeSteps(DOWN)
+end
+
+function completeSSAnne(pickup)
+	walkTo(vermillion_center)
+	healAndExit()
+	walkTo(vermillion_anne)
+	mashTillTurned(RIGHT)
+	turnAndTakeSteps(DOWN,2)
+	transition()
+	turnAndTakeSteps(DOWN,3)
+	transition()
+	walkTo(ss_anne_1F_top_left)
+	turnAndTakeSteps(LEFT)
+	transition()
+	walkTo(ss_anne_2F_captain)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(ss_anne_captain_cap)
+	turnAndTakeSteps(UP)
+	pressAndAdvance(A)
+	mashTillTurned(DOWN)
+	walkTo(ss_anne_captain_door)
+	turnAndTakeSteps(LEFT)
+	transition()
+	walkTo(ss_anne_2F_top_left)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(ss_anne_1F_exit)
+	turnAndTakeSteps(UP)
+	transition()
+	mashTillTurned(RIGHT)
+	walkTo(vermillion_center)
+	healAndExit()
 end

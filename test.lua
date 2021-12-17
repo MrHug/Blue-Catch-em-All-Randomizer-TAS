@@ -20,15 +20,21 @@ function main()
 	console.clear()
 	-- savestate.loadslot(1)
 	-- savestate.loadslot(2)
-	savestate.loadslot(6)
-	set_loglevel(L_VERBOSE)
+	savestate.loadslot(7)
+	set_loglevel(L_DEBUG)
 	client.unpause()
 	client.speedmode(3500)
-	while true do
-		mt_moon(true)
+--	while true do
+	teachTM(196,1,0)
+	walkTo(vermillion_cutbush)
+	turn(DOWN)
+	useCut()
+	walkTo(vermillion_gym)
+	turnAndTakeSteps(UP)
+	transition()
 		--savestate.saveslot(3)
-		break
-	end
+		--break
+	--end
   client.pause()
 end
 

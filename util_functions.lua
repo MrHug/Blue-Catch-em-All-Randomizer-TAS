@@ -545,3 +545,44 @@ function runFromSaveSlotToSaveSlot(slot1, func, slot2)
   end
   client.pause()
 end
+
+function teachTM(item_id, poke_index, move_index)
+	pressAndAdvance(START)
+	goToMenuItem(2)
+	pressAndAdvance(A)
+	y = findItemInInventory(item_id)
+	goToMenuItem(0)
+	goDir(DOWN,y)
+	while memory.readbyte(Y_COORD_MENU_MEM) ~= 1 do
+		pressAndAdvance(A)
+	end
+	goToMenuItem(poke_index)
+	pressAndAdvance(A)
+	while memory.readbyte(Y_COORD_MENU_MEM) ~= 8 do
+		pressAndAdvance(A)
+	end
+	pressAndAdvance(A)
+	while memory.readbyte(X_COORD_MENU_MEM) ~= 5 do
+		pressAndAdvance(A)
+	end
+	goToMenuItem(move_index)
+	pressAndAdvance(A)
+	while memory.readbyte(Y_COORD_MENU_MEM) ~= 4 do
+		pressAndAdvance(A)
+	end
+	mashTillTurned(RIGHT)
+end
+
+function useCut()
+	pressAndAdvance(START)
+	goToMenuItem(1)
+	goToMenuItem(0)
+	goToMenuItem(1)
+	pressAndAdvance(A)
+	pressAndAdvance(A)
+	pressAndAdvance(A)
+	pressAndAdvance(A)
+	pressAndAdvance(A)
+	pressAndAdvance(A)
+	mashTillTurned(RIGHT)
+end
