@@ -40,7 +40,7 @@ function handleBattle()
 	local data = {}
 	data["state"] = STATE_BATTLE_OPENING
 	log(L_VERBOSE, "************\nBATTLE: starting battle")
-	
+	savestate.saveslot(5)
 	while (true) do
 		local state = data["state"]
 		if state == STATE_BATTLE_OPENING then
@@ -65,7 +65,7 @@ end
 function handleTrainerWalkingUpToUs()
 	-- NPC is approaching, but battle bit is not yet set.
 	if bit.band(memory.readbyte(VARIOUS_FLAGS_7), 8) > 0 and bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) == 0 then
-		log(L_INFO, "NPC approaching for battle")
+		log(L_DEBUG, "NPC approaching for battle")
 		while not (bit.band(memory.readbyte(VARIOUS_FLAGS_3), 64) > 0) do
 		  pressAndAdvance(B)
 		end
@@ -125,6 +125,12 @@ function handleMyTrainerTurn(data)
 		data["numEnemyPoke"] = memory.readbyte(ENEMY_NUM_POKE_MEM)
 		log(L_DEBUG, "Established we're fighting against this many pokes " .. data["numEnemyPoke"])
 		--client.pause()
+	end
+	if getMyStatus() == STATUS_SLEEP then
+		log(L_DEBUG, "BATTLE: Sleeping, so WFT")
+		pressAndAdvance(A)
+		data["state"] = STATE_BATTLE_WFT
+		return data
 	end
 	data['killedEnemy'] = nil
 	logAll(L_VERBOSE, data["numEnemyPoke"])
