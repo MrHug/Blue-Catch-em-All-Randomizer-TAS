@@ -22,8 +22,8 @@ function get_to_menu()
 end
 
 function options()
-	pressButton(DOWN)
-	advanceFrame(4)
+	log(L_DEBUG, "Going into options")
+	goToMenuItem(2,false,20)
 	pressButton(A)
 	advanceFrame(23)
 	pressButton(DOWN)
@@ -53,7 +53,7 @@ function set_name()
 	advanceFrame(15)
 	mashText(1)
 	advanceFrame(10)
-	savestate.saveslot(1)
+	-- savestate.saveslot(1)
 	input_mrhug()
 	mashText(3)
 	advanceFrame(100)
@@ -99,7 +99,7 @@ function input_aurei()
 	pressAndAdvance(A,10) -- E
 	
 	goDir(RIGHT,4)
-	pressAndAdvance(A,10) -- E
+	pressAndAdvance(A,10) -- I
 
 	pressAndAdvance(START,30)
 end

@@ -5,6 +5,7 @@ my_house_exit = {[0] = 7, [1] = 3}
 
 -- Pallet Town
 pallet_exit_grass = {[0] = 1, [1] = 10}
+pallet_lab = {[0] = 12, [1] = 12}
 pallet_route_1 = {[0]=0, [1] = 10}
 
 
@@ -13,6 +14,7 @@ oak_lab_ball_1 = {[0] = 4, [1] =6}
 oak_lab_ball_2 = {[0] = 4, [1] =7}
 oak_lab_ball_3 = {[0] = 4, [1] =8}
 oak_lab_rival_fight = {[0]=6, [1] = 5}
+oak_lab_behind_oak = {[0]=1, [1] = 5}
 oak_lab_exit = {[0]= 11, [1] = 5}
 
 
@@ -22,10 +24,11 @@ route_1_viridian = { [0] = 0, [1] = 11}
 
 -- Viridian
 
+viridian_cut_bush = { [0] = 4, [1] = 15}
 viridian_center = { [0] = 26, [1] = 23}
 viridian_mart = { [0] = 20, [1] = 29}
 viridian_route_2 = { [0] = 0, [1] = 18}
-viridian_route_1 = { [0] = 32, [1] = 21}
+viridian_route_1 = { [0] = 35, [1] = 21}
 
 
 -- Route 2
@@ -33,7 +36,7 @@ viridian_route_1 = { [0] = 32, [1] = 21}
 route_2_viridian = { [0] = 71, [1] = 8}
 route_2_forest_viridian_side = { [0] = 44, [1] = 3}
 route_2_forest_pewter_side = { [0] = 11, [1] = 3}
-route_2_forest_pewter_side = { [0] = 0, [1] = 9}
+route_2_pewter = { [0] = 0, [1] = 9}
 
 -- Viridian Forest
 
@@ -41,6 +44,9 @@ viridian_forest_south_gate_viridian = {[0] = 7, [1] = 5}
 viridian_forest_south_gate_forest = {[0] = 1, [1] = 5}
 viridian_forest_south_entrance = { [0] = 47, [1] = 17}
 viridian_forest_tree_item = { [0] = 42, [1] = 15}
+viridian_forest_right_item = { [0] = 12, [1] = 25}
+viridian_forest_middle_item = { [0] = 12, [1] = 28}
+viridian_forest_in_front_of_trainer = { [0] = 18, [1] = 1}
 viridian_forest_west_item = { [0] = 31, [1] = 2}
 viridian_forest_north_entrance = { [0] = 0, [1] = 1}
 viridian_forest_north_gate_pewter = { [0] = 0, [1] = 5}
@@ -93,6 +99,7 @@ route_6_underground_house_down = {[0] = 4, [1] = 3}
 
 moon_route_4_entrance = { [0] = 35, [1] = 15 }
 moon_route_4_f1_top_left_stairs = { [0] = 4, [1] = 5 }
+moon_route_4_f1_top_left_item = { [0] = 2, [1] = 3 }
 moon_route_4_f2_top_left_in = { [0] = 5, [1] = 6 }
 moon_route_4_f2_top_left_out = { [0] = 17, [1] = 20 }
 moon_route_4_f3_mid_right = { [0] = 16, [1] = 21 }
@@ -120,9 +127,20 @@ cerulean_trashed_house_entrance = { [0] = 7, [1] = 3}
 cerulean_trashed_house_exit = { [0] = 1, [1] = 3}
 
 -- Vermillion
+MAP_NUM_VERMILLION = 95
 
 vermillion_center = { [0] = 4, [1] = 11}
+vermillion_anne = { [0] = 30, [1] = 18}
+vermillion_cutbush = { [0] = 17, [1] = 15}
+vermillion_gym = { [0] = 20, [1] = 12}
 
+-- SS Anne
+ss_anne_1F_top_left = { [0] = 6, [1] = 3}
+ss_anne_1F_exit = { [0] = 0, [1] = 26}
+ss_anne_2F_top_left = { [0] = 5, [1] = 2}
+ss_anne_2F_captain = { [0] = 5, [1] = 36}
+ss_anne_captain_cap = { [0] = 3, [1] = 4}
+ss_anne_captain_door = { [0] = 7, [1] = 1}
 
 -- Route 24
 
@@ -162,21 +180,11 @@ function route1_viridian_to_pallet_encounterless()
 end
 
 function viridian_entrace_to_mart()
-	turnAndTakeSteps(LEFT,2)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(RIGHT,4)
-	-- Check if Center is needed
-	turnAndTakeSteps(RIGHT,3)
-	turnAndTakeSteps(UP,6)
-	turnAndTakeSteps(RIGHT,3)
-	turnAndTakeSteps(UP,1)
+	walkTo(viridian_center)
+	healAndExit()
+	walkTo(viridian_mart)
+	turnAndTakeSteps(UP)
 	transition()
-end
-
-function viridian_entrace_to_pokecenter()
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,4)
-	turnAndTakeSteps(RIGHT,4)
 end
 
 function viridian_center_to_route1catching()
@@ -189,81 +197,72 @@ function viridian_center_to_route1catching()
 end
 
 function route1catching_to_viridian_center()
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(LEFT,4)
-	turnAndTakeSteps(UP,12)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(RIGHT,4)
+	walkTo(route_1_viridian)
 end
 
 function viridian_mart_to_entrance()
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(DOWN,6)
-	takeHop(DOWN)
-	takeSteps(DOWN,2)
-	turnAndTakeSteps(LEFT,5)
+	walkTo(viridian_route_1)
 end
 
 function pallet_entrance_to_lab()
-	takeSteps(DOWN,5)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(DOWN,5)
-	turnAndTakeSteps(RIGHT,3)
-	turnAndTakeSteps(UP,1)
+	walkTo(pallet_lab)
+	turnAndTakeSteps(UP)
 	transition()
 end
 
 function lab_to_pallet_entrance()
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,10)
-	turnAndTakeSteps(RIGHT,1)
-	turn(UP)
+	walkTo(pallet_route_1)
 end
 
 function oaks_lab_behind_oak()
-	takeSteps(UP,8)
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(UP,2)
-	turnAndTakeSteps(RIGHT,1)
+	walkTo(oak_lab_behind_oak)
 	turn(DOWN)
 end
 
 function behind_oak_exit_lab()
-	turnAndTakeSteps(LEFT,1)
-	turnAndTakeSteps(DOWN,11)
+	walkTo(oak_lab_exit)
+	turnAndTakeSteps(DOWN)
 	transition()
 end
 
 function viridian_center_to_forest(pick_up)
-	turnAndTakeSteps(LEFT,4)
-	turnAndTakeSteps(UP,20)
-	-- Dodge the dude
-	cnt = 0
-	while memory.readbyte(SPRITE_X_POS_MEM + 0x10 * 7) == memory.readbyte(SPRITE_X_POS_MEM) do
-		turnAndTakeSteps(LEFT,1)
-		cnt = cnt + 1
-	end
-	turnAndTakeSteps(UP,2)
-	while cnt > 0 do
-		cnt = cnt - 1
-		turnAndTakeSteps(RIGHT,1)
-	end
-	if pick_up then
-		turnAndTakeSteps(LEFT,4)
+	if (pick_up) then
+		walkTo(viridian_cut_bush)
+		turn(LEFT)
 		pickupItem(RIGHT)
-		turnAndTakeSteps(RIGHT,3)
-	else 
-		turnAndTakeSteps(LEFT)
 	end
-	turnAndTakeSteps(UP,14)
-	turnAndTakeSteps(LEFT)
-	turnAndTakeSteps(UP,5)
-	turnAndTakeSteps(LEFT,3)
-	turnAndTakeSteps(UP,5)
-	turnAndTakeSteps(RIGHT,6)
-	turnAndTakeSteps(UP,8)
-	turnAndTakeSteps(LEFT,7)
+	walkTo(viridian_route_2)
+	turnAndTakeSteps(UP)
+	walkTo(route_2_forest_viridian_side)
+	turnAndTakeSteps(UP)
+	transition()
+end
+
+function viridian_forest_up(pick_up)
+	walkTo(viridian_forest_south_gate_forest)
+	turnAndTakeSteps(UP)
+	transition()
+	if (pick_up) then
+		walkTo(viridian_forest_tree_item)
+		turn(RIGHT)
+		pickupItem(LEFT)
+		walkTo(viridian_forest_west_item)
+		turn(LEFT)
+		pickupItem(RIGHT)
+		walkTo(viridian_forest_right_item)
+		turn(UP)
+		pickupItem(RIGHT)
+		walkTo(viridian_forest_middle_item)
+		turn(DOWN)
+		pickupItem(UP)
+		walkTo(viridian_forest_in_front_of_trainer)
+		turn(UP)
+		pickupItem(DOWN)
+	end
+	walkTo(viridian_forest_north_entrance)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(viridian_forest_north_gate_pewter)
 	turnAndTakeSteps(UP)
 	transition()
 end
@@ -282,6 +281,47 @@ function pewter_first_time()
   walkTo(pewter_center)
   healAndExit()
   walkTo(pewter_route_3)
+end
+
+function pewter_enter_mt_moon()
+  log(L_DEBUG, "Moving to Route 3")
+	walkTo(pewter_route_3)
+	turnAndTakeSteps(RIGHT)
+  log(L_DEBUG, "Moving to Route 4")
+	walkTo(route_3_route_4)
+	turnAndTakeSteps(UP)
+  log(L_DEBUG, "Moving to Route 4 center")
+	walkTo(route_4_center)
+	healAndExit()
+  log(L_DEBUG, "Moving to Moon entrance")
+	walkTo(route_4_moon_pewter_side)
+	turnAndTakeSteps(UP)
+	transition()
+end
+
+function mt_moon(pick_up)
+	if pick_up then
+		walkTo(moon_route_4_f1_top_left_item)
+		mashTillTurned(LEFT)
+		pickupItem(RIGHT)
+	end
+	walkTo(moon_route_4_f1_top_left_stairs)
+	turnAndTakeSteps(DOWN)
+	transition()
+	walkTo(moon_route_4_f2_top_left_out)
+	turnAndTakeSteps(RIGHT)
+	transition()
+	savestate.saveslot(3)
+	walkTo(moon_route_4_f3_fossil)
+	pickupFossil()
+	walkTo(moon_route_4_f3_top_left_out)
+	turnAndTakeSteps(RIGHT)
+	transition()
+	walkTo(moon_route_4_f2_top_right_out)
+	turnAndTakeSteps(RIGHT)
+	transition()
+	walkTo(route_4_cerulean)
+	turnAndTakeSteps(RIGHT)
 end
 
 function doNuggetBridge()
@@ -319,6 +359,19 @@ function doBillCutScene()
   transition()
 end
 
+function beatMisty()
+	walkTo(cerulean_gym)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(cerulean_gym_misty)
+	mashTillTurned(LEFT)
+	battleGymLeader()
+	walkTo(cerulean_gym_exit)
+	turnAndTakeSteps(DOWN)
+	walkTo(cerulean_center)
+	healAndExit()
+end
+
 function throughTrashedHouse()
 	walkTo(cerulean_dig_house_entrance)
 	turnAndTakeSteps(RIGHT)
@@ -353,4 +406,37 @@ function ceruleanToViridian()
 	-- On route 6
 	walkTo(route_6_vermillion)
 	turnAndTakeSteps(DOWN)
+end
+
+function completeSSAnne(pickup)
+	walkTo(vermillion_center)
+	healAndExit()
+	walkTo(vermillion_anne)
+	mashTillTurned(RIGHT)
+	turnAndTakeSteps(DOWN,2)
+	transition()
+	turnAndTakeSteps(DOWN,3)
+	transition()
+	walkTo(ss_anne_1F_top_left)
+	turnAndTakeSteps(LEFT)
+	transition()
+	walkTo(ss_anne_2F_captain)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(ss_anne_captain_cap)
+	turnAndTakeSteps(UP)
+	pressAndAdvance(A)
+	mashTillTurned(DOWN)
+	walkTo(ss_anne_captain_door)
+	turnAndTakeSteps(LEFT)
+	transition()
+	walkTo(ss_anne_2F_top_left)
+	turnAndTakeSteps(UP)
+	transition()
+	walkTo(ss_anne_1F_exit)
+	turnAndTakeSteps(UP)
+	transition()
+	mashTillTurned(RIGHT)
+	walkTo(vermillion_center)
+	healAndExit()
 end

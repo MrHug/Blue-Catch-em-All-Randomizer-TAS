@@ -43,10 +43,17 @@ dir_map = {
 	[RIGHT] = DIR_RIGHT
 }
 
-X_COORD_MENU_MEM = 0xCC24
+Y_COORD_MENU_MEM = 0xCC24
+X_COORD_MENU_MEM = 0xCC25
 
 IN_BATTLE_MEM = 0xD057
+
 IN_BATTLE_TURNS_MEM = 0xCCD5
+VARIOUS_FLAGS_3 = 0xD72D -- bit 6 is reset after battle
+VARIOUS_FLAGS_7 = 0xD733 -- Bit 3 indicates trainer is walking towards us
+
+AUDIO_BANK_MEM = 0xC0EF
+AUDIO_TRACK_MEM = 0xC026 -- Is 0F when bank is 08 for wild battle
 
 MY_POKE_MOVE_1_MEM = 0xD01C
 MY_SELECTED_MOVE_POWER = 0xCFD4
@@ -67,6 +74,7 @@ MART_ITEM_OFFSET_MEM = 0xCF7C
 MY_NUM_OF_POKES = 0xD163 
 MY_POKE_MEM = 0xD014
 MY_HP_MEM = 0xD015
+MY_STATUS_MEM = 0xD018 -- Bit 6: Paralyze, 5: frozen, 4: burned, 3: Poisoned, 2-0: Sleep counter
 
 TOTAL_ITEMS_MEM=0xD31D
 ITEM_1_MEM=0xD31E

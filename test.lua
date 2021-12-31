@@ -20,21 +20,21 @@ function main()
 	console.clear()
 	-- savestate.loadslot(1)
 	-- savestate.loadslot(2)
-	savestate.loadslot(0)
+	savestate.loadslot(7)
 	set_loglevel(L_DEBUG)
 	client.unpause()
-	while true do
-    
-		printStatus()
-		doNuggetBridge()
-		walkTo(cerulean_center)
-		healAndExit()
-		throughTrashedHouse()
-		ceruleanToViridian()
-		savestate.saveslot(1)
-		-- savestate.saveslot(2)
-		break
-	end
+	client.speedmode(3500)
+--	while true do
+	teachTM(196,1,0)
+	walkTo(vermillion_cutbush)
+	turn(DOWN)
+	useCut()
+	walkTo(vermillion_gym)
+	turnAndTakeSteps(UP)
+	transition()
+		--savestate.saveslot(3)
+		--break
+	--end
   client.pause()
 end
 
